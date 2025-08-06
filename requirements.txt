@@ -1,0 +1,11 @@
+feedparser
+python-dotenv
+beautifulsoup4
+requests
+PyMySQL
+Flask
+Flask-Cors
+gunicorn
+openai
+bleach
+pytz 

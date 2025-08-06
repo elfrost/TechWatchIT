@@ -1,0 +1,161 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Workflow de développement TechWatchIT
+
+## Flux de développement
+
+### Setup initial
+1. **Cloner le projet** et naviguer dans le répertoire
+2. **Exécuter [setup.bat](mdc:setup.bat)** pour l'installation automatique
+3. **Configurer .env** en copiant [env.example](mdc:env.example)
+4. **Tester la collecte** avec `python src/fetch_feeds.py`
+
+### Développement de nouvelles fonctionnalités
+
+#### 1. Ajout d'une nouvelle source RSS
+```python
+# Dans config/config.py
+"nouvelle_source": {
+    "name": "Nom de la source",
+    "url": "https://exemple.com/feed.xml",
+    "category": "nom_tech", 
+    "priority": "high|medium|low"
+}
+```
+
+#### 2. Extension des mots-clés de classification
+```python
+# Dans config/config.py - TECH_KEYWORDS
+"nouvelle_tech": ["mot1", "mot2", "alias", "variation"]
+```
+
+#### 3. Création d'un nouveau module
+- Créer dans `src/` avec imports système en premier
+- Hériter des patterns de [src/fetch_feeds.py](mdc:src/fetch_feeds.py)
+- Utiliser `Config.setup_logging()` pour les logs
+- Suivre la structure SQLite existante
+
+## Tests et validation
+
+### Tests locaux obligatoires
+```bash
+# Formater le code
+black src/ config/
+
+# Vérifier la syntaxe
+flake8 src/ config/
+
+# Lancer les tests
+pytest tests/
+
+# Tester la collecte complète
+python src/fetch_feeds.py
+```
+
+### Validation des données
+- **Vérifier database.db** : Tables créées et articles insérés
+- **Contrôler logs/app.log** : Pas d'erreurs critiques
+- **Tester les configurations** : Variables d'environnement valides
+
+## Débogage
+
+### Problèmes fréquents
+
+#### Flux RSS inaccessible
+```bash
+# Vérifier la connectivité
+curl -I "https://url-du-flux.com/feed.xml"
+
+# Tester manuellement
+python -c "import feedparser; print(feedparser.parse('URL').status)"
+```
+
+#### Base de données corrompue
+```bash
+# Supprimer et recréer
+rm data/database.db
+python src/fetch_feeds.py
+```
+
+#### Erreurs OpenAI
+- Vérifier `OPENAI_API_KEY` dans .env
+- Contrôler les quotas API sur platform.openai.com
+- Utiliser classification par mots-clés en fallback
+
+### Logs de débogage
+```python
+# Activer debug temporaire
+import logging
+logging.getLogger().setLevel(logging.DEBUG)
+
+# Ou dans .env
+LOG_LEVEL=DEBUG
+```
+
+## Extensions recommandées
+
+### Prochains modules prioritaires
+1. **src/api.py** : API REST Flask/FastAPI
+2. **src/ai_classifier.py** : Classification IA avancée  
+3. **scripts/scheduler.py** : Automatisation avec schedule
+4. **src/alert_handler.py** : Notifications email critiques
+
+### Structure recommandée pour API
+```python
+from flask import Flask, jsonify, request
+from config.config import Config
+
+app = Flask(__name__)
+
+@app.route('/api/articles')
+def get_articles():
+    # Récupération BDD avec filtres
+    pass
+
+@app.route('/api/stats')
+def get_stats():
+    # Statistiques par source/technologie
+    pass
+```
+
+## Intégration continue
+
+### Pre-commit hooks recommandés
+```bash
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/psf/black
+    hooks: [{id: black}]
+  - repo: https://github.com/pycqa/flake8
+    hooks: [{id: flake8}]
+```
+
+### Pipeline de validation
+1. **Linting** : black, flake8
+2. **Tests** : pytest avec couverture
+3. **Sécurité** : bandit pour scan vulnérabilités
+4. **Dépendances** : safety pour audit packages
+
+## Monitoring production
+
+### Métriques à surveiller
+- **Taux de succès** par source RSS (> 90%)
+- **Latence collecte** (< 30s par source)
+- **Volume articles** quotidien (alertes si drop > 50%)
+- **Alertes critiques** envoyées vs manquées
+
+### Alertes opérationnelles
+- Base de données inaccessible
+- Échec > 3 sources consécutives
+- Erreurs OpenAI > 10/jour
+- Espace disque < 1GB
+
+### Maintenance régulière
+- **Quotidien** : Vérifier logs erreurs
+- **Hebdomadaire** : Nettoyer anciens articles (> 30 jours)
+- **Mensuel** : Mettre à jour dépendances Python
+- **Trimestriel** : Audit sécurité et performance
+

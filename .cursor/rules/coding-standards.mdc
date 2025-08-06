@@ -1,0 +1,125 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Standards de codage TechWatchIT
+
+## Style Python
+
+### Formatage
+- Utiliser **Black** avec config par défaut (ligne 88 caractères)
+- Import organisés : standard library → third party → local imports
+- Docstrings Google style pour toutes les fonctions publiques
+
+### Nommage
+- **Classes** : PascalCase (`FeedFetcher`, `Config`)
+- **Fonctions/méthodes** : snake_case (`fetch_rss_feed`, `save_articles`)
+- **Variables** : snake_case (`feed_source`, `articles_count`)
+- **Constantes** : UPPER_SNAKE_CASE (`RSS_FEEDS`, `TECH_KEYWORDS`)
+
+## Architecture des modules
+
+### Structure des classes
+```python
+class ModuleName:
+    """Docstring describing the class purpose"""
+    
+    def __init__(self):
+        self.logger = Config.setup_logging()
+        # Initialisation...
+    
+    def public_method(self, param: Type) -> ReturnType:
+        """
+        Brief description
+        
+        Args:
+            param: Description
+            
+        Returns:
+            Description of return value
+        """
+        pass
+```
+
+### Gestion des erreurs
+- **Spécifique d'abord** : Attraper les exceptions spécifiques avant les génériques
+- **Logging obligatoire** : Toujours logger les erreurs avec contexte
+- **Graceful degradation** : Le système doit continuer malgré les erreurs partielles
+
+```python
+try:
+    response = self.session.get(feed_url, timeout=30)
+    response.raise_for_status()
+except requests.RequestException as e:
+    self.logger.error(f"❌ Erreur réseau pour {feed_name}: {str(e)}")
+    return []
+except Exception as e:
+    self.logger.error(f"❌ Erreur inattendue pour {feed_name}: {str(e)}")
+    return []
+```
+
+## Base de données
+
+### Schéma SQLite
+- **Nommage tables** : snake_case pluriel (`raw_articles`, `processed_articles`)
+- **Clés primaires** : Toujours `id INTEGER PRIMARY KEY AUTOINCREMENT`
+- **Timestamps** : Utiliser `DATETIME DEFAULT CURRENT_TIMESTAMP`
+- **Contraintes** : UNIQUE sur les champs critiques (URLs, GUIDs)
+
+### Transactions
+```python
+conn = sqlite3.connect(Config.DATABASE_PATH)
+cursor = conn.cursor()
+try:
+    cursor.execute("INSERT OR IGNORE INTO...", data)
+    conn.commit()
+finally:
+    conn.close()
+```
+
+## Configuration et environnement
+
+### Variables d'environnement
+- Préfixer avec le nom du projet si applicable
+- Valeurs par défaut sensées dans la classe Config
+- Validation des types (int, bool, float) avec conversion
+
+### Logging
+- **Niveaux** : INFO pour opérations normales, WARNING pour données malformées, ERROR pour échecs, CRITICAL pour alertes sécurité
+- **Format** : Inclure timestamp, module, niveau et message
+- **Encodage** : UTF-8 pour support caractères spéciaux
+
+## Sécurité
+
+### Données sensibles
+- Jamais de clés API ou mots de passe hardcodés
+- Utiliser `python-dotenv` pour `.env`
+- Valider toutes les entrées externes (URLs, données RSS)
+
+### Requêtes HTTP
+- Timeout obligatoire sur toutes les requêtes
+- User-Agent personnalisé identifiant le projet
+- Gestion des erreurs de certificats SSL
+
+## Tests et qualité
+
+### Structure tests
+```
+tests/
+├── __init__.py
+├── test_config.py
+├── test_fetch_feeds.py
+└── test_database.py
+```
+
+### Conventions pytest
+- Préfixer les fonctions de test par `test_`
+- Utiliser des fixtures pour setup/teardown
+- Mocker les appels externes (API, fichiers)
+
+### Métriques qualité
+- **Couverture** : Minimum 80% sur le code métier
+- **Complexité** : Éviter les fonctions > 20 lignes
+- **Duplication** : Factoriser le code répétitif
+

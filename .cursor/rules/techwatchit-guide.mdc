@@ -1,0 +1,105 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Guide de développement TechWatchIT
+
+## Architecture du projet
+
+TechWatchIT est une plateforme de veille technologique automatisée qui collecte, traite et alerte sur les actualités IT de sécurité.
+
+### Structure principale
+- [config/config.py](mdc:config/config.py) : Configuration centralisée et variables d'environnement
+- [src/fetch_feeds.py](mdc:src/fetch_feeds.py) : Module principal de collecte des flux RSS/JSON
+- [requirements.txt](mdc:requirements.txt) : Dépendances Python du projet
+- [README.md](mdc:README.md) : Documentation complète du projet
+
+## Technologies et frameworks
+
+### Core Python
+- **Flask/FastAPI** : APIs REST et serveur web
+- **SQLite** : Base de données locale pour stocker les articles
+- **feedparser** : Parsing des flux RSS
+- **OpenAI** : Classification et résumés par IA des articles
+
+### Sources de données
+Le projet collecte depuis 7 sources principales :
+1. **Fortinet PSIRT** : Alertes sécurité FortiGate
+2. **SentinelOne** : Blog sécurité endpoint
+3. **JumpCloud** : Notes de versions directory service
+4. **VMware** : Advisories sécurité vSphere/ESXi
+5. **Rubrik** : Blog Zero Trust et backup
+6. **Dell** : Advisories sécurité serveurs
+7. **NVD** : Base nationale des vulnérabilités (format JSON)
+
+## Patterns de développement
+
+### Configuration
+- Toutes les variables d'environnement sont centralisées dans `Config`
+- Les flux RSS sont définis dans `RSS_FEEDS` avec catégorie et priorité
+- Les mots-clés de classification sont dans `TECH_KEYWORDS`
+
+### Base de données
+Structure SQLite avec 3 tables principales :
+- `raw_articles` : Articles bruts récupérés
+- `processed_articles` : Articles traités par IA
+- `fetch_log` : Historique des récupérations
+
+### Classification automatique
+1. **Priorité IA** : GPT-4o via OpenAI API
+2. **Fallback mots-clés** : Classification par correspondance lexicale
+3. **Scoring CVSS** : Attribution automatique des scores de sévérité
+
+## Conventions de code
+
+### Logging
+- Utiliser `self.logger` dans les classes
+- Format standardisé : `INFO`, `WARNING`, `ERROR`, `CRITICAL`
+- Logs sauvegardés dans `logs/app.log`
+
+### Gestion d'erreurs
+- Toujours wrapper les requêtes réseau dans try/catch
+- Logger les erreurs avec le nom de la source
+- Continuer le traitement même en cas d'échec d'une source
+
+### Base de données
+- Utiliser `INSERT OR IGNORE` pour éviter les doublons
+- Fermer systématiquement les connexions SQLite
+- Toujours committer les transactions
+
+## Extensions futures
+
+### Modules à développer
+- `src/api.py` : API REST pour le dashboard web
+- `src/ai_classifier.py` : Classification avancée par IA
+- `src/alert_handler.py` : Système d'alertes critiques
+- `scripts/scheduler.py` : Automatisation cron/schedule
+- `web/dashboard.html` : Interface web de consultation
+
+### Fonctionnalités prévues
+- Dashboard web avec filtres par technologie/sévérité
+- Notifications email automatiques (digest quotidien)
+- Alertes temps réel pour CVSS ≥ 9.0
+- API REST avec endpoints `/api/articles` et `/api/stats`
+- Intégration avec environnement WAMP existant
+
+## Environnement de développement
+
+### Setup automatique
+Utiliser [setup.bat](mdc:setup.bat) pour l'installation complète :
+- Création environnement virtuel Python
+- Installation des dépendances
+- Configuration des variables d'environnement
+- Initialisation de la base de données
+
+### Variables critiques
+- `OPENAI_API_KEY` : Requis pour les résumés IA
+- `SMTP_USERNAME/PASSWORD` : Requis pour les notifications
+- `ALERT_RECIPIENTS` : Liste des destinataires d'alertes
+
+### Tests et qualité
+- Tests avec `pytest tests/`
+- Formatage avec `black src/`
+- Linting avec `flake8 src/`
+
