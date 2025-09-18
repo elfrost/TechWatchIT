@@ -1,24 +1,23 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechWatchIT - Dashboard de Veille IT</title>
+    <title>TechWatchIT - Business Technology Monitor</title>
     
     <!-- CSS Frameworks -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- CSS personnalisé -->
-    
     <style>
         :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
+            --primary-color: #0d6efd;
+            --secondary-color: #6f42c1;
             --danger-color: #dc3545;
             --warning-color: #ffc107;
-            --success-color: #28a745;
-            --dark-color: #343a40;
+            --success-color: #198754;
+            --info-color: #0dcaf0;
+            --dark-color: #212529;
         }
 
         body {
@@ -28,76 +27,88 @@
 
         .navbar {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .stat-card {
             transition: all 0.3s ease;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: none;
+            overflow: hidden;
         }
 
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
 
         .card {
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             border: none;
         }
 
-        .tech-badge {
-            display: inline-block;
-            padding: 4px 8px;
+        /* Priority Alert Section */
+        .priority-section {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+            color: white;
             border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
+            margin-bottom: 2rem;
         }
 
-        .severity-critical { background-color: var(--danger-color); color: white; }
-        .severity-high { background-color: #fd7e14; color: white; }
-        .severity-medium { background-color: var(--warning-color); color: #212529; }
-        .severity-low { background-color: var(--success-color); color: white; }
+        /* Technology Badges */
+        .tech-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-        .tech-fortigate { background-color: #e74c3c; color: white; }
-        .tech-sentinelone { background-color: #3498db; color: white; }
-        .tech-jumpcloud { background-color: #9b59b6; color: white; }
-        .tech-vmware { background-color: #f39c12; color: white; }
-        .tech-rubrik { background-color: #2ecc71; color: white; }
-        .tech-dell { background-color: #34495e; color: white; }
-        .tech-exploits { background-color: #e67e22; color: white; }
-        .tech-other { background-color: #95a5a6; color: white; }
+        /* CVE & Security (Priority) */
+        .tech-cve { background: linear-gradient(45deg, #dc3545, #e74c3c); color: white; }
+        
+        /* Business Technologies */
+        .tech-office365 { background: linear-gradient(45deg, #0078d4, #106ebe); color: white; }
+        .tech-windows { background: linear-gradient(45deg, #00bcf2, #0078d4); color: white; }
+        .tech-sentinelone { background: linear-gradient(45deg, #663399, #8e44ad); color: white; }
+        .tech-jumpcloud { background: linear-gradient(45deg, #ff6b35, #f7931e); color: white; }
+        .tech-vmware { background: linear-gradient(45deg, #607c8a, #455a64); color: white; }
+        .tech-redhat { background: linear-gradient(45deg, #ee0000, #cc0000); color: white; }
+        .tech-rocky_linux { background: linear-gradient(45deg, #10b981, #059669); color: white; }
+        
+        /* Severity levels */
+        .severity-critical { background: var(--danger-color); color: white; }
+        .severity-high { background: #fd7e14; color: white; }
+        .severity-medium { background: var(--warning-color); color: #212529; }
+        .severity-low { background: var(--success-color); color: white; }
 
         .table-hover tbody tr:hover {
-            background-color: rgba(102, 126, 234, 0.1);
+            background-color: rgba(13, 110, 253, 0.05);
         }
 
         .btn {
             border-radius: 8px;
             font-weight: 500;
-        }
-
-        .nav-link {
-            border-radius: 8px;
-            margin: 0 2px;
             transition: all 0.3s ease;
         }
 
-        .nav-link:hover {
-            background-color: rgba(255,255,255,0.1);
+        .btn:hover {
+            transform: translateY(-1px);
         }
 
-        .nav-link.active {
-            background-color: rgba(255,255,255,0.2);
+        /* Business Categories */
+        .category-cve {
+            border-left: 4px solid var(--danger-color);
+            background: linear-gradient(90deg, rgba(220, 53, 69, 0.1) 0%, transparent 100%);
         }
 
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #6c757d;
+        .category-business {
+            border-left: 4px solid var(--primary-color);
+            background: linear-gradient(90deg, rgba(13, 110, 253, 0.1) 0%, transparent 100%);
         }
 
         .alert-floating {
@@ -108,318 +119,391 @@
             max-width: 400px;
         }
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-
         .status-indicator {
             width: 12px;
             height: 12px;
             border-radius: 50%;
             display: inline-block;
             margin-right: 8px;
+            box-shadow: 0 0 8px currentColor;
         }
 
         .status-online { background-color: var(--success-color); }
         .status-offline { background-color: var(--danger-color); }
         .status-warning { background-color: var(--warning-color); }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .stat-card {
+                margin-bottom: 1rem;
+            }
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation principale -->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-rocket me-2"></i>
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-shield-alt me-2"></i>
                 <strong>TechWatchIT</strong>
+                <small class="ms-2 opacity-75">Business Monitor</small>
             </a>
             
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto d-flex align-items-center">
                 <span class="navbar-text me-3">
                     <i class="fas fa-clock me-1"></i>
-                    <span id="last-update">Chargement...</span>
+                    <span id="last-update">Loading...</span>
                 </span>
                 <button class="btn btn-outline-light btn-sm" id="refresh-btn">
-                    <i class="fas fa-sync-alt"></i> Actualiser
+                    <i class="fas fa-sync-alt"></i> Refresh
                 </button>
             </div>
         </div>
     </nav>
 
     <div class="container-fluid mt-4">
-        <!-- Alertes système -->
+        <!-- System Alerts -->
         <div id="alerts-container"></div>
 
-        <!-- Section Dashboard -->
-        <div id="dashboard-section">
-            <!-- Statistiques principales -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card stat-card border-primary">
-                        <div class="card-body text-center">
-                            <i class="fas fa-newspaper fa-2x text-primary mb-2"></i>
-                            <h4 class="mb-1" id="total-articles">0</h4>
-                            <small class="text-muted">Articles totaux</small>
-                        </div>
-                    </div>
+        <!-- Priority CVE Section -->
+        <div class="priority-section p-4 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="mb-2">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Critical Security Alerts (CVE Priority)
+                    </h4>
+                    <p class="mb-0 opacity-75">Real-time monitoring of critical vulnerabilities affecting your business technologies</p>
                 </div>
-                
-                <div class="col-md-3">
-                    <div class="card stat-card border-danger">
-                        <div class="card-body text-center">
-                            <i class="fas fa-exclamation-triangle fa-2x text-danger mb-2"></i>
-                            <h4 class="mb-1" id="security-alerts">0</h4>
-                            <small class="text-muted">Alertes sécurité</small>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-flex justify-content-md-end">
+                        <div class="me-4">
+                            <h2 class="mb-0" id="cve-alerts-count">0</h2>
+                            <small>CVE Alerts</small>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3">
-                    <div class="card stat-card border-warning">
-                        <div class="card-body text-center">
-                            <i class="fas fa-fire fa-2x text-warning mb-2"></i>
-                            <h4 class="mb-1" id="critical-count">0</h4>
-                            <small class="text-muted">Articles critiques</small>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3">
-                    <div class="card stat-card border-success">
-                        <div class="card-body text-center">
-                            <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
-                            <h4 class="mb-1" id="high-count">0</h4>
-                            <small class="text-muted">Articles importants</small>
+                        <div>
+                            <h2 class="mb-0" id="critical-alerts-count">0</h2>
+                            <small>Critical</small>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Graphiques et filtres -->
-            <div class="row mb-4">
-                <!-- Filtres -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtres</h5>
+        <!-- Main Statistics -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card">
+                    <div class="card-body text-center p-4">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                                <i class="fas fa-newspaper fa-2x text-primary"></i>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Technologie</label>
-                                <select class="form-select" id="tech-filter">
-                                    <option value="">Toutes les technologies</option>
-                                    <option value="fortigate">FortiGate</option>
+                        <h3 class="mb-1 fw-bold" id="total-articles">0</h3>
+                        <p class="text-muted mb-0">Total Articles</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card">
+                    <div class="card-body text-center p-4">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <div class="bg-danger bg-opacity-10 rounded-circle p-3">
+                                <i class="fas fa-shield-alt fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                        <h3 class="mb-1 fw-bold" id="security-alerts">0</h3>
+                        <p class="text-muted mb-0">Security Alerts</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card">
+                    <div class="card-body text-center p-4">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <div class="bg-warning bg-opacity-10 rounded-circle p-3">
+                                <i class="fas fa-building fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                        <h3 class="mb-1 fw-bold" id="business-tech-count">0</h3>
+                        <p class="text-muted mb-0">Business Tech</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card">
+                    <div class="card-body text-center p-4">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                                <i class="fas fa-clock fa-2x text-success"></i>
+                            </div>
+                        </div>
+                        <h3 class="mb-1 fw-bold" id="last-24h-count">0</h3>
+                        <p class="text-muted mb-0">Last 24h</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Charts -->
+        <div class="row mb-4">
+            <!-- Filters -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-filter me-2"></i>Filters & Search
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Technology</label>
+                            <select class="form-select" id="tech-filter">
+                                <option value="">All Technologies</option>
+                                <optgroup label="🚨 Security & CVE">
+                                    <option value="cve">CVE & Security Alerts</option>
+                                </optgroup>
+                                <optgroup label="💼 Business Technologies">
+                                    <option value="office365">Office 365</option>
+                                    <option value="windows">Windows</option>
                                     <option value="sentinelone">SentinelOne</option>
                                     <option value="jumpcloud">JumpCloud</option>
                                     <option value="vmware">VMware</option>
-                                    <option value="rubrik">Rubrik</option>
-                                    <option value="dell">Dell</option>
-                                    <option value="exploits">Exploits</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Sévérité</label>
-                                <select class="form-select" id="severity-filter">
-                                    <option value="">Toutes les sévérités</option>
-                                    <option value="critical">Critique</option>
-                                    <option value="high">Importante</option>
-                                    <option value="medium">Moyenne</option>
-                                    <option value="low">Faible</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Période</label>
-                                <select class="form-select" id="period-filter">
-                                    <option value="7">7 derniers jours</option>
-                                    <option value="30" selected>30 derniers jours</option>
-                                    <option value="90">90 derniers jours</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="alerts-only-filter">
-                                <label class="form-check-label" for="alerts-only-filter">
-                                    Alertes sécurité uniquement
-                                </label>
-                            </div>
-                            
-                            <button class="btn btn-primary w-100" id="apply-filters">
-                                <i class="fas fa-search me-1"></i> Appliquer les filtres
+                                    <option value="redhat">Red Hat</option>
+                                    <option value="rocky_linux">Rocky Linux</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Severity</label>
+                            <select class="form-select" id="severity-filter">
+                                <option value="">All Severities</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Time Period</label>
+                            <select class="form-select" id="period-filter">
+                                <option value="7">Last 7 days</option>
+                                <option value="30" selected>Last 30 days</option>
+                                <option value="90">Last 90 days</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="cve-only-filter">
+                            <label class="form-check-label fw-semibold" for="cve-only-filter">
+                                CVE & Security Only
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button class="btn btn-primary" id="apply-filters">
+                                <i class="fas fa-search me-1"></i> Apply Filters
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Graphique -->
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Évolution des alertes (30 jours)</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="alerts-chart" height="300"></canvas>
+                <!-- Quick Stats -->
+                <div class="card mt-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Technology Summary
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="tech-summary" class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Technology</th>
+                                        <th class="text-center">Articles</th>
+                                        <th class="text-center">Alerts</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tech-summary-body">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Technologies et répartition -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Répartition par technologie</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="tech-chart" height="250"></canvas>
-                        </div>
+            <!-- Chart -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>Security Alerts Timeline (30 days)
+                        </h5>
                     </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Résumé par technologie</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="tech-summary" class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Technologie</th>
-                                            <th class="text-center">Articles</th>
-                                            <th class="text-center">Alertes</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tech-summary-body">
-                                        <tr>
-                                            <td colspan="3" class="text-center text-muted">Chargement...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                    <div class="card-body">
+                        <div style="position: relative; height: 350px;">
+                            <canvas id="alerts-chart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section Articles -->
-        <div id="articles-section">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fas fa-newspaper me-2"></i>Articles récents</h5>
-                            <div>
-                                <button class="btn btn-sm btn-outline-primary" id="export-articles">
-                                    <i class="fas fa-download me-1"></i> Exporter
-                                </button>
-                            </div>
+        <!-- Articles Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>Recent Articles
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" id="export-articles">
+                                <i class="fas fa-download me-1"></i> Export
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="admin-toggle">
+                                <i class="fas fa-cog me-1"></i> Admin
+                            </button>
                         </div>
-                        <div class="card-body">
-                            <!-- Barre de recherche -->
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" id="search-articles" placeholder="Rechercher dans les articles...">
+                    </div>
+                    <div class="card-body">
+                        <!-- Search Bar -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" id="search-articles" 
+                                           placeholder="Search articles...">
                                 </div>
-                                <div class="col-md-3">
-                                    <select class="form-select" id="sort-articles">
-                                        <option value="date-desc">Plus récents</option>
-                                        <option value="date-asc">Plus anciens</option>
-                                        <option value="severity-desc">Sévérité décroissante</option>
-                                        <option value="tech-asc">Technologie A-Z</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-primary w-100" id="search-btn">
-                                        <i class="fas fa-search me-1"></i> Rechercher
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sort-articles">
+                                    <option value="date-desc">Newest First</option>
+                                    <option value="date-asc">Oldest First</option>
+                                    <option value="severity-desc">Severity (High→Low)</option>
+                                    <option value="tech-asc">Technology (A→Z)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-primary" id="search-btn">
+                                        <i class="fas fa-search me-1"></i> Search
                                     </button>
                                 </div>
                             </div>
-                            
-                            <!-- Table des articles -->
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Technologie</th>
-                                            <th>Titre</th>
-                                            <th class="text-center">Sévérité</th>
-                                            <th class="text-center">CVSS</th>
-                                            <th class="text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="articles-table-body">
-                                        <tr>
-                                            <td colspan="6" class="loading">
-                                                <i class="fas fa-spinner fa-spin me-2"></i>
-                                                Chargement des articles...
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <!-- Pagination -->
-                            <nav>
-                                <ul class="pagination justify-content-center" id="articles-pagination">
-                                    <!-- Généré dynamiquement -->
-                                </ul>
-                            </nav>
                         </div>
+                        
+                        <!-- Articles Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Technology</th>
+                                        <th>Title</th>
+                                        <th class="text-center">Severity</th>
+                                        <th class="text-center">CVSS</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="articles-table-body">
+                                    <tr>
+                                        <td colspan="6" class="loading">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>
+                                            Loading articles...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <nav>
+                            <ul class="pagination justify-content-center" id="articles-pagination">
+                                <!-- Dynamically generated -->
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section Administration -->
-        <div id="admin-section" style="display: none;">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Actions administratives</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-primary" id="manual-fetch">
-                                    <i class="fas fa-download me-2"></i>
-                                    Récupérer les flux RSS
-                                </button>
-                                
-                                <button class="btn btn-success" id="process-articles">
-                                    <i class="fas fa-robot me-2"></i>
-                                    Traiter avec l'IA
-                                </button>
-                            </div>
+        <!-- Admin Section -->
+        <div id="admin-section" class="row mt-4" style="display: none;">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning bg-opacity-10">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tools me-2"></i>Admin Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-3">
+                            <button class="btn btn-primary" id="manual-fetch">
+                                <i class="fas fa-download me-2"></i>
+                                Fetch RSS Feeds
+                            </button>
+                            
+                            <button class="btn btn-success" id="process-articles">
+                                <i class="fas fa-robot me-2"></i>
+                                Process with AI
+                            </button>
+                            
+                            <button class="btn btn-warning" id="send-digest">
+                                <i class="fas fa-envelope me-2"></i>
+                                Send Daily Digest
+                            </button>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>État du système</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="system-status">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span><span class="status-indicator status-online"></span>API</span>
-                                    <span class="badge bg-success">Opérationnelle</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span><span class="status-indicator" id="db-indicator"></span>Base de données</span>
-                                    <span class="badge bg-secondary" id="db-status">Vérification...</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span><span class="status-indicator" id="openai-indicator"></span>OpenAI</span>
-                                    <span class="badge bg-secondary" id="openai-status">Vérification...</span>
-                                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info bg-opacity-10">
+                        <h5 class="mb-0">
+                            <i class="fas fa-heartbeat me-2"></i>System Health
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="system-status">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>
+                                    <span class="status-indicator status-online"></span>API Server
+                                </span>
+                                <span class="badge bg-success">Online</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>
+                                    <span class="status-indicator" id="db-indicator"></span>MySQL Database
+                                </span>
+                                <span class="badge bg-secondary" id="db-status">Checking...</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>
+                                    <span class="status-indicator" id="openai-indicator"></span>OpenAI API
+                                </span>
+                                <span class="badge bg-secondary" id="openai-status">Checking...</span>
                             </div>
                         </div>
                     </div>
@@ -428,23 +512,26 @@
         </div>
     </div>
 
-    <!-- Modals -->
-    <!-- Modal détail article -->
-    <div class="modal fade" id="article-modal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+    <!-- Article Detail Modal -->
+    <div class="modal fade" id="articleModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="article-modal-title">Détail de l'article</h5>
+                    <h5 class="modal-title" id="articleModalTitle">Article Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body" id="article-modal-body">
-                    <!-- Contenu généré dynamiquement -->
+                <div class="modal-body" id="articleModalBody">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                        <p class="mt-2">Loading...</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-primary" id="article-original-link" target="_blank">
-                        <i class="fas fa-external-link-alt me-1"></i> Voir l'article original
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a id="articleExternalLink" href="#" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-external-link-alt me-1"></i>
+                        View Original
                     </a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>
@@ -453,26 +540,23 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.29.3/umd/index.min.js"></script>
     
-    <!-- Le script dashboard.js est maintenant inclus directement ci-dessous -->
-
-    <!-- Script d'initialisation -->
     <script>
-        // Configuration API - Utilise l'URL courante
+        // API Configuration
         const API_BASE = window.location.origin;
         
-        // Variables globales
+        // Global Variables
         let currentArticles = [];
         let filteredArticles = [];
+        let alertsChart = null;
         
-        // Utilitaires
+        // Utility Functions
         function formatDate(dateString) {
             if (!dateString) return '-';
             const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR', {
-                day: '2-digit',
-                month: '2-digit',
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
                 year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit'
@@ -497,7 +581,6 @@
             
             document.getElementById('alerts-container').appendChild(alertDiv);
             
-            // Auto-remove after 5 seconds
             setTimeout(() => {
                 if (alertDiv.parentNode) {
                     alertDiv.remove();
@@ -505,32 +588,30 @@
             }, 5000);
         }
         
-        // Variables pour les graphiques
-        let alertsChart = null;
-        let techChart = null;
-        
-        // Fonctions de chargement des données
+        // Data Loading Functions
         async function loadDashboardStats() {
             try {
                 const response = await fetch(`${API_BASE}/api/stats/summary`);
                 const data = await response.json();
                 
                 if (data.success) {
-                    document.getElementById('total-articles').textContent = data.summary.total_articles || 0;
-                    document.getElementById('security-alerts').textContent = data.summary.security_alerts || 0;
-                    document.getElementById('critical-count').textContent = data.summary.critical_count || 0;
-                    document.getElementById('high-count').textContent = data.summary.high_count || 0;
+                    const stats = data.summary;
+                    document.getElementById('total-articles').textContent = stats.total_articles || 0;
+                    document.getElementById('security-alerts').textContent = stats.security_alerts || 0;
+                    document.getElementById('business-tech-count').textContent = stats.business_tech_count || 0;
+                    document.getElementById('last-24h-count').textContent = stats.last_24h_count || 0;
+                    document.getElementById('cve-alerts-count').textContent = stats.cve_alerts || 0;
+                    document.getElementById('critical-alerts-count').textContent = stats.critical_count || 0;
                     
                     document.getElementById('last-update').textContent = 
-                        'Mis à jour: ' + formatDate(data.summary.last_update);
+                        'Updated: ' + formatDate(stats.last_update);
                 }
                 
-                // Charger les graphiques
                 await loadCharts();
                 
             } catch (error) {
-                console.error('Erreur chargement stats:', error);
-                showAlert('Erreur lors du chargement des statistiques', 'warning');
+                console.error('Error loading stats:', error);
+                showAlert('Error loading dashboard statistics', 'warning');
             }
         }
         
@@ -540,38 +621,24 @@
                 const response = await fetch(`${API_BASE}/api/stats?days_back=${periodFilter}`);
                 const data = await response.json();
                 
-                if (data.stats) { // Vérifier si les données de stats existent
-                    // Renommer le titre du graphique dynamiquement
-                    const chartTitle = document.querySelector('.card-header h5:first-child');
-                    if(chartTitle && chartTitle.textContent.includes('Évolution des alertes')) {
-                        chartTitle.innerHTML = `<i class="fas fa-chart-line me-2"></i>Évolution des alertes (${periodFilter} jours)`;
-                    }
-                    
-                    // Graphique évolution des alertes
+                if (data.stats) {
                     createAlertsChart(data.stats.daily_evolution);
-                    
-                    // Graphique répartition par technologie
-                    createTechChart(data.stats.by_technology);
-                    
-                    // Résumé par technologie
                     createTechSummary(data.stats.by_technology);
                 }
             } catch (error) {
-                console.error('Erreur chargement graphiques:', error);
+                console.error('Error loading charts:', error);
             }
         }
         
         function createAlertsChart(dailyData) {
             const ctx = document.getElementById('alerts-chart').getContext('2d');
             
-            // Détruire le graphique existant
             if (alertsChart) {
                 alertsChart.destroy();
             }
             
-            // Préparer les données (7 derniers jours)
             const last7Days = dailyData.slice(0, 7).reverse();
-            const labels = last7Days.map(d => new Date(d.date).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' }));
+            const labels = last7Days.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
             const articlesData = last7Days.map(d => d.articles);
             const alertsData = last7Days.map(d => d.alerts);
             
@@ -584,13 +651,15 @@
                         data: articlesData,
                         borderColor: '#0d6efd',
                         backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                        tension: 0.4
+                        tension: 0.4,
+                        fill: true
                     }, {
-                        label: 'Alertes',
+                        label: 'Security Alerts',
                         data: alertsData,
                         borderColor: '#dc3545',
                         backgroundColor: 'rgba(220, 53, 69, 0.1)',
-                        tension: 0.4
+                        tension: 0.4,
+                        fill: true
                     }]
                 },
                 options: {
@@ -613,60 +682,25 @@
             });
         }
         
-        function createTechChart(techData) {
-            const ctx = document.getElementById('tech-chart').getContext('2d');
-            
-            // Détruire le graphique existant
-            if (techChart) {
-                techChart.destroy();
-            }
-            
-            const labels = techData.map(t => t.technology.toUpperCase());
-            const data = techData.map(t => t.count);
-            const colors = [
-                '#0d6efd', '#198754', '#dc3545', '#ffc107', '#6f42c1',
-                '#fd7e14', '#20c997', '#6c757d', '#e83e8c', '#17a2b8'
-            ];
-            
-            techChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: colors.slice(0, labels.length),
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        }
-                    }
-                }
-            });
-        }
-        
         function createTechSummary(techData) {
             const tbody = document.getElementById('tech-summary-body');
             
             if (techData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Aucune donnée disponible</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No data available</td></tr>';
                 return;
             }
             
+            // Sort by alerts (descending), then by count
+            techData.sort((a, b) => (b.alerts - a.alerts) || (b.count - a.count));
+            
             tbody.innerHTML = techData.map(tech => `
-                <tr>
+                <tr class="${tech.technology === 'cve' ? 'category-cve' : 'category-business'}">
                     <td>
                         <span class="tech-badge tech-${tech.technology}">
-                            ${tech.technology.toUpperCase()}
+                            ${tech.technology.toUpperCase().replace('_', ' ')}
                         </span>
                     </td>
-                    <td class="text-center">${tech.count}</td>
+                    <td class="text-center fw-bold">${tech.count}</td>
                     <td class="text-center">
                         <span class="badge ${tech.alerts > 0 ? 'bg-danger' : 'bg-secondary'}">
                             ${tech.alerts}
@@ -678,15 +712,15 @@
         
         async function loadArticles() {
             try {
-                // Récupérer les filtres
                 const techFilter = document.getElementById('tech-filter').value;
                 const severityFilter = document.getElementById('severity-filter').value;
                 const periodFilter = document.getElementById('period-filter').value;
+                const cveOnlyFilter = document.getElementById('cve-only-filter').checked;
                 
-                // Construire l'URL avec filtres
                 let url = `${API_BASE}/api/articles?limit=100&days_back=${periodFilter}`;
                 if (techFilter) url += `&technology=${techFilter}`;
                 if (severityFilter) url += `&severity=${severityFilter}`;
+                if (cveOnlyFilter) url += `&security_only=true`;
                 
                 const response = await fetch(url);
                 const data = await response.json();
@@ -696,15 +730,15 @@
                     filteredArticles = [...currentArticles];
                     renderArticlesTable();
                 } else {
-                    throw new Error(data.error || 'Erreur inconnue');
+                    throw new Error(data.error || 'Unknown error');
                 }
             } catch (error) {
-                console.error('Erreur chargement articles:', error);
-                showAlert('Erreur lors du chargement des articles', 'danger');
+                console.error('Error loading articles:', error);
+                showAlert('Error loading articles', 'danger');
                 document.getElementById('articles-table-body').innerHTML = `
                     <tr><td colspan="6" class="text-center text-danger">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        Erreur de chargement
+                        Error loading articles
                     </td></tr>
                 `;
             }
@@ -717,25 +751,25 @@
                 tbody.innerHTML = `
                     <tr><td colspan="6" class="text-center text-muted">
                         <i class="fas fa-inbox me-2"></i>
-                        Aucun article trouvé
+                        No articles found
                     </td></tr>
                 `;
                 return;
             }
             
             tbody.innerHTML = filteredArticles.slice(0, 50).map(article => `
-                <tr>
-                    <td>${formatDate(article.published_date)}</td>
+                <tr class="${article.technology === 'cve' ? 'category-cve' : 'category-business'}">
+                    <td class="text-nowrap">${formatDate(article.published_date)}</td>
                     <td>
                         <span class="${getTechBadgeClass(article.technology)}">
-                            ${(article.technology || 'other').toUpperCase()}
+                            ${(article.technology || 'other').toUpperCase().replace('_', ' ')}
                         </span>
                     </td>
                     <td>
-                        <a href="${article.link}" target="_blank" class="text-decoration-none">
+                        <a href="${article.link}" target="_blank" class="text-decoration-none fw-semibold">
                             ${article.title}
                         </a>
-                        ${article.is_security_alert ? '<i class="fas fa-exclamation-triangle text-danger ms-2" title="Alerte sécurité"></i>' : ''}
+                        ${article.is_security_alert ? '<i class="fas fa-shield-alt text-danger ms-2" title="Security Alert"></i>' : ''}
                     </td>
                     <td class="text-center">
                         <span class="${getSeverityBadgeClass(article.severity_level)}">
@@ -743,15 +777,17 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        ${article.cvss_score ? `<strong>${article.cvss_score}</strong>` : '-'}
+                        ${article.cvss_score ? `<strong class="text-danger">${article.cvss_score}</strong>` : '-'}
                     </td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-info me-1" onclick="showArticleDetails(${article.id})" title="Voir le résumé IA">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <a href="${article.link}" target="_blank" class="btn btn-sm btn-outline-primary" title="Lien externe">
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-info" onclick="showArticleDetails(${article.id})" title="AI Summary">
+                                <i class="fas fa-robot"></i>
+                            </button>
+                            <a href="${article.link}" target="_blank" class="btn btn-outline-primary" title="Original Article">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -762,60 +798,51 @@
                 const response = await fetch(`${API_BASE}/health`);
                 const data = await response.json();
                 
-                // Mise à jour statut base de données
                 const dbStatus = document.getElementById('db-status');
                 const dbIndicator = document.getElementById('db-indicator');
                 
                 if (data.database === 'OK') {
-                    dbStatus.textContent = 'Connectée';
+                    dbStatus.textContent = 'Connected';
                     dbStatus.className = 'badge bg-success';
                     dbIndicator.className = 'status-indicator status-online';
                 } else {
-                    dbStatus.textContent = 'Erreur';
+                    dbStatus.textContent = 'Error';
                     dbStatus.className = 'badge bg-danger';
                     dbIndicator.className = 'status-indicator status-offline';
                 }
                 
-                // Mise à jour statut OpenAI
                 const openaiStatus = document.getElementById('openai-status');
                 const openaiIndicator = document.getElementById('openai-indicator');
                 
                 if (data.openai === 'OK') {
-                    openaiStatus.textContent = 'Configuré';
+                    openaiStatus.textContent = 'Configured';
                     openaiStatus.className = 'badge bg-success';
                     openaiIndicator.className = 'status-indicator status-online';
                 } else {
-                    openaiStatus.textContent = 'Non configuré';
+                    openaiStatus.textContent = 'Not Configured';
                     openaiStatus.className = 'badge bg-warning';
                     openaiIndicator.className = 'status-indicator status-warning';
                 }
                 
             } catch (error) {
-                console.error('Erreur vérification santé:', error);
-                document.getElementById('db-status').textContent = 'Erreur';
-                document.getElementById('db-status').className = 'badge bg-danger';
-                document.getElementById('openai-status').textContent = 'Erreur';
-                document.getElementById('openai-status').className = 'badge bg-danger';
+                console.error('Error checking system health:', error);
             }
         }
         
-        // Actions administratives
+        // Admin Functions
         async function triggerManualFetch() {
             const btn = document.getElementById('manual-fetch');
             const originalText = btn.innerHTML;
             
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Récupération...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Fetching...';
             btn.disabled = true;
             
             try {
-                const response = await fetch(`${API_BASE}/api/admin/fetch`, {
-                    method: 'POST'
-                });
+                const response = await fetch(`${API_BASE}/api/admin/fetch`, { method: 'POST' });
                 const data = await response.json();
                 
                 if (data.success) {
                     showAlert(data.message, 'success');
-                    // Recharger les données
                     setTimeout(() => {
                         loadDashboardStats();
                         loadArticles();
@@ -824,54 +851,22 @@
                     throw new Error(data.error);
                 }
             } catch (error) {
-                console.error('Erreur fetch manuel:', error);
-                showAlert('Erreur lors de la récupération des flux', 'danger');
+                console.error('Error manual fetch:', error);
+                showAlert('Error fetching RSS feeds', 'danger');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }
         }
         
-        async function triggerProcessing() {
-            const btn = document.getElementById('process-articles');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Traitement...';
-            btn.disabled = true;
-            
-            try {
-                const response = await fetch(`${API_BASE}/api/admin/process`, {
-                    method: 'POST'
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert(data.message, 'success');
-                    // Recharger les données
-                    setTimeout(() => {
-                        loadDashboardStats();
-                        loadArticles();
-                    }, 2000);
-                } else {
-                    throw new Error(data.error);
-                }
-            } catch (error) {
-                console.error('Erreur traitement IA:', error);
-                showAlert('Erreur lors du traitement IA', 'danger');
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
-        
-        // Event listeners
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
-            // Chargement initial
+            // Initial load
             loadDashboardStats();
             loadArticles();
             checkSystemHealth();
             
-            // Bouton actualiser
+            // Refresh button
             document.getElementById('refresh-btn').addEventListener('click', function() {
                 const btn = this;
                 const icon = btn.querySelector('i');
@@ -887,33 +882,41 @@
                 });
             });
             
-            // Filtres
+            // Filter button
             document.getElementById('apply-filters').addEventListener('click', () => {
                 loadArticles();
-                loadCharts(); // Ajout de l'actualisation des graphiques
+                loadCharts();
             });
             
-            // Actions admin
-            document.getElementById('manual-fetch').addEventListener('click', triggerManualFetch);
-            document.getElementById('process-articles').addEventListener('click', triggerProcessing);
+            // Admin toggle
+            document.getElementById('admin-toggle').addEventListener('click', function() {
+                const adminSection = document.getElementById('admin-section');
+                const isVisible = adminSection.style.display !== 'none';
+                adminSection.style.display = isVisible ? 'none' : 'block';
+                this.innerHTML = isVisible ? 
+                    '<i class="fas fa-cog me-1"></i> Admin' : 
+                    '<i class="fas fa-times me-1"></i> Close';
+            });
             
-            // Actualisation automatique toutes les 5 minutes
+            // Admin actions
+            document.getElementById('manual-fetch').addEventListener('click', triggerManualFetch);
+            
+            // Auto-refresh every 5 minutes
             setInterval(() => {
                 loadDashboardStats();
                 loadArticles();
             }, 5 * 60 * 1000);
         });
         
-        // Fonction pour afficher les détails d'un article
+        // Article details function
         async function showArticleDetails(articleId) {
             const modal = new bootstrap.Modal(document.getElementById('articleModal'));
             const modalBody = document.getElementById('articleModalBody');
             
-            // Réinitialiser le contenu
             modalBody.innerHTML = `
-                <div class="text-center">
+                <div class="loading">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
-                    <p class="mt-2">Chargement...</p>
+                    <p class="mt-2">Loading article details...</p>
                 </div>
             `;
             
@@ -928,80 +931,69 @@
                 
                 modalBody.innerHTML = `
                     <div class="row">
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-info-circle me-2"></i>Informations</h6>
-                            <p><strong>Date:</strong> ${formatDate(article.published_date)}</p>
-                            <p><strong>Technologie:</strong> 
-                                <span class="${getTechBadgeClass(article.technology)}">
-                                    ${(article.technology || 'other').toUpperCase()}
-                                </span>
-                            </p>
-                            <p><strong>Sévérité:</strong> 
-                                <span class="${getSeverityBadgeClass(article.severity_level)}">
-                                    ${(article.severity_level || 'medium').toUpperCase()}
-                                </span>
-                            </p>
-                            ${article.cvss_score ? `<p><strong>Score CVSS:</strong> ${article.cvss_score}</p>` : ''}
-                            ${article.is_security_alert ? '<p><span class="badge bg-danger">🚨 Alerte Sécurité</span></p>' : ''}
-                        </div>
-                        <div class="col-md-6">
-                            <h6><i class="fas fa-robot me-2"></i>Analyse IA</h6>
-                            ${article.ai_summary ? `
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <h6 class="card-title">📋 Résumé</h6>
-                                        <p class="card-text">${article.ai_summary.replace(/\\n/g, '<br>')}</p>
-                                    </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-info-circle me-2"></i>Article Information
+                                    </h6>
+                                    <p><strong>Date:</strong> ${formatDate(article.published_date)}</p>
+                                    <p><strong>Technology:</strong> 
+                                        <span class="${getTechBadgeClass(article.technology)}">
+                                            ${(article.technology || 'other').toUpperCase().replace('_', ' ')}
+                                        </span>
+                                    </p>
+                                    <p><strong>Severity:</strong> 
+                                        <span class="${getSeverityBadgeClass(article.severity_level)}">
+                                            ${(article.severity_level || 'medium').toUpperCase()}
+                                        </span>
+                                    </p>
+                                    ${article.cvss_score ? `<p><strong>CVSS Score:</strong> <span class="text-danger fw-bold">${article.cvss_score}</span></p>` : ''}
+                                    ${article.is_security_alert ? '<p><span class="badge bg-danger"><i class="fas fa-shield-alt me-1"></i>Security Alert</span></p>' : ''}
                                 </div>
-                            ` : '<p class="text-muted">Aucun résumé IA disponible</p>'}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 bg-primary bg-opacity-10">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-robot me-2"></i>AI Analysis
+                                    </h6>
+                                    ${article.ai_summary ? `
+                                        <div class="bg-white rounded p-3">
+                                            <h6 class="text-primary"><i class="fas fa-file-text me-2"></i>Summary</h6>
+                                            <p>${article.ai_summary.replace(/\\n/g, '<br>')}</p>
+                                        </div>
+                                    ` : '<p class="text-muted">No AI summary available</p>'}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     ${article.content ? `
-                        <div class="mt-3">
-                            <h6><i class="fas fa-file-text me-2"></i>Contenu</h6>
-                            <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
-                                ${article.content.substring(0, 1000)}${article.content.length > 1000 ? '...' : ''}
+                        <div class="card border-0 mt-3">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="fas fa-file-alt me-2"></i>Article Content
+                                </h6>
+                                <div class="bg-light rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                                    ${article.content.substring(0, 1000)}${article.content.length > 1000 ? '...' : ''}
+                                </div>
                             </div>
                         </div>
                     ` : ''}
                 `;
                 
             } catch (error) {
-                console.error('Erreur chargement article:', error);
+                console.error('Error loading article:', error);
                 modalBody.innerHTML = `
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        Erreur lors du chargement des détails
+                        Error loading article details
                     </div>
                 `;
             }
         }
     </script>
-
-    <!-- Modal pour les détails d'article -->
-    <div class="modal fade" id="articleModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="articleModalTitle">Détails de l'article</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="articleModalBody">
-                    <div class="text-center">
-                        <i class="fas fa-spinner fa-spin fa-2x"></i>
-                        <p class="mt-2">Chargement...</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <a id="articleExternalLink" href="#" target="_blank" class="btn btn-primary">
-                        <i class="fas fa-external-link-alt me-1"></i>
-                        Voir l'article complet
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
-</html> 
+</html>
