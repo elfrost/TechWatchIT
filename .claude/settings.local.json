@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python test_rss_sources.py:*)",
+      "Bash(pip install:*)",
+      "Bash(del:*)",
+      "Bash(rm:*)",
+      "Bash(python test:*)",
+      "Bash(python:*)",
+      "WebFetch(domain:github.com)",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

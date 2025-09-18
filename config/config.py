@@ -94,210 +94,149 @@ class Config:
         
         return logging.getLogger('TechWatchIT')
 
-# Configuration des flux RSS de départ
+# Configuration des flux RSS - Technologies Business (validées)
 RSS_FEEDS = {
-    # === SOURCES OFFICIELLES DE SÉCURITÉ ===
-    "defend_edge": {
-        "name": "Defend Edge Vulnerability Summaries",
-        "url": "https://www.defendedge.com/feed/",
-        "category": "Official Security Advisory",
-        "technology": "exploits",
-        "description": "Weekly vulnerability summaries and security advisories"
+    # === CVE ET ALERTES SÉCURITÉ (PRIORITÉ MAXIMALE) ===
+    "cisa_current": {
+        "name": "CISA Current Activity", 
+        "url": "https://www.cisa.gov/uscert/ncas/current-activity.xml",
+        "category": "CVE Alert",
+        "technology": "cve",
+        "description": "CISA current security activities and vulnerability alerts"
     },
-    "nvd_alternative": {
-        "name": "Alternative CVE Feed",
-        "url": "https://open-source-security-software.net/cves.atom",
-        "category": "Vulnerability Database",
-        "technology": "exploits",
-        "description": "Alternative feed for recent CVE vulnerabilities"
+    "cisa_advisories": {
+        "name": "CISA Security Advisories",
+        "url": "https://www.cisa.gov/uscert/ncas/alerts.xml", 
+        "category": "CVE Alert",
+        "technology": "cve",
+        "description": "CISA critical security advisories and alerts"
     },
     "sans_isc": {
         "name": "SANS Internet Storm Center",
         "url": "https://isc.sans.edu/rssfeed.xml",
-        "category": "Security Alert",
-        "technology": "exploits",
+        "category": "CVE Alert", 
+        "technology": "cve",
         "description": "SANS ISC threat intelligence and security alerts"
     },
-    
-    # === SOURCES SPÉCIALISÉES EXPLOITS ===
-    "exploit_db": {
-        "name": "Exploit Database",
-        "url": "https://www.exploit-db.com/rss.xml",
-        "category": "Exploit Database",
-        "technology": "exploits",
-        "description": "Latest exploits and proof-of-concept code"
-    },
-    "rapid7_blog": {
-        "name": "Rapid7 Security Blog",
-        "url": "https://blog.rapid7.com/rss/",
-        "category": "Security Research",
-        "technology": "exploits",
-        "description": "Rapid7 vulnerability research and security intelligence"
-    },
-    "tenable_blog": {
-        "name": "Tenable Security Blog",
-        "url": "https://www.tenable.com/blog/rss.xml",
-        "category": "Security Research",
-        "technology": "exploits",
-        "description": "Tenable vulnerability research and security analysis"
-    },
-    
-    # === SOURCES THREAT INTELLIGENCE ===
-    "cyware_alerts": {
-        "name": "Cyware Threat Intelligence",
-        "url": "https://cyware.com/rss/threat-briefings",
-        "category": "Threat Intelligence",
-        "technology": "exploits",
-        "description": "Daily threat intelligence and security briefings"
-    },
-    "bleeping_computer": {
-        "name": "Bleeping Computer Security",
-        "url": "https://www.bleepingcomputer.com/feed/",
-        "category": "Security News",
-        "technology": "exploits",
-        "description": "Breaking security news and vulnerability reports"
-    },
-    "krebs_security": {
-        "name": "Krebs on Security",
-        "url": "https://krebsonsecurity.com/feed/",
-        "category": "Security Investigation",
-        "technology": "exploits",
-        "description": "In-depth security investigations and breach reports"
-    },
-    "dark_reading": {
-        "name": "Dark Reading",
-        "url": "https://www.darkreading.com/rss/all.xml",
-        "category": "Security Analysis",
-        "technology": "exploits",
-        "description": "Enterprise security news and analysis"
-    },
-    
-    # === NOUVELLES SOURCES FIABLES ===
     "the_hacker_news": {
         "name": "The Hacker News",
         "url": "https://feeds.feedburner.com/TheHackersNews",
         "category": "Security News",
-        "technology": "exploits",
-        "description": "Latest hacking news and cybersecurity updates"
-    },
-    "security_affairs": {
-        "name": "Security Affairs",
-        "url": "https://securityaffairs.com/feed",
-        "category": "Security News",
-        "technology": "exploits",
-        "description": "Information security and cybersecurity news"
-    },
-    "threatpost": {
-        "name": "Threatpost",
-        "url": "https://threatpost.com/feed/",
-        "category": "Threat Intelligence",
-        "technology": "exploits",
-        "description": "Independent news source for cybersecurity threats"
+        "technology": "cve", 
+        "description": "Latest hacking news and vulnerability reports"
     },
     
-    # === SOURCES CONSTRUCTEURS (AMÉLIORÉES) ===
-    "fortinet": {
-        "name": "Fortinet PSIRT",
-        "url": "https://www.fortiguard.com/rss/ir.xml",
-        "category": "Security Advisory",
-        "technology": "fortinet",
-        "description": "Fortinet Product Security Incident Response Team advisories"
-    },
-    "vmware_security": {
-        "name": "VMware Security Advisories",
-        "url": "https://www.vmware.com/security/advisories.xml",
-        "category": "Security Advisory",
-        "technology": "vmware",
-        "description": "VMware security advisories and vulnerability reports"
-    },
-    "dell_security": {
-        "name": "Dell Security Advisory",
-        "url": "https://www.dell.com/support/security/rss.xml",
-        "category": "Security Advisory",
-        "technology": "dell",
-        "description": "Dell security advisories and product updates"
+    # === TECHNOLOGIES BUSINESS UTILISÉES ===
+    "microsoft_office365": {
+        "name": "Microsoft 365 Blog",
+        "url": "https://www.microsoft.com/en-us/microsoft-365/blog/feed/",
+        "category": "Product Update",
+        "technology": "office365",
+        "description": "Microsoft Office 365 updates and announcements"
     },
     "microsoft_security": {
-        "name": "Microsoft Security Updates",
+        "name": "Microsoft Security Blog",
         "url": "https://www.microsoft.com/security/blog/feed/",
-        "category": "Security Update",
-        "technology": "microsoft",
-        "description": "Microsoft security updates and vulnerability research"
+        "category": "Security Update", 
+        "technology": "windows",
+        "description": "Microsoft security updates for Windows and Office"
     },
-    
-
-    
-    # === SOURCES ENTREPRISE ===
     "sentinelone": {
-        "name": "SentinelOne Security Research",
+        "name": "SentinelOne Blog",
         "url": "https://www.sentinelone.com/feed/",
-        "category": "Security Research",
-        "technology": "sentinelone",
-                "description": "SentinelOne cybersecurity research and threat intelligence"
+        "category": "Endpoint Security",
+        "technology": "sentinelone", 
+        "description": "SentinelOne endpoint security research and updates"
     },
-    "rubrik_blog": {
-        "name": "Rubrik Security Blog",
-        "url": "https://www.rubrik.com/blog/feed/",
-        "category": "Data Security",
-        "technology": "rubrik",
-        "description": "Rubrik data security and cyber recovery insights"
-    },
-    "jumpcloud_blog": {
-        "name": "JumpCloud Security Blog",
+    "jumpcloud_main": {
+        "name": "JumpCloud Blog",
         "url": "https://jumpcloud.com/blog/feed/",
-        "category": "Identity Security",
+        "category": "Identity Management",
         "technology": "jumpcloud",
-        "description": "JumpCloud identity and access management security insights"
+        "description": "JumpCloud directory service and IAM updates"
     },
-    
-    # === SOURCES ANALYSE MALWARE ===
-    "malwarebytes_labs": {
-        "name": "Malwarebytes Labs",
-        "url": "https://www.malwarebytes.com/blog/feed/",
-        "category": "Malware Analysis",
-        "technology": "exploits",
-        "description": "Malware analysis and threat research"
+    "jumpcloud_resources": {
+        "name": "JumpCloud Resources",
+        "url": "https://jumpcloud.com/resources/feed/",
+        "category": "Identity Management", 
+        "technology": "jumpcloud",
+        "description": "JumpCloud technical resources and guides"
     },
-    
-    # === SOURCES GOUVERNEMENTALES ===
-    "us_cert": {
-        "name": "US-CERT Current Activity",
-        "url": "https://www.cisa.gov/uscert/ncas/current-activity.xml",
-        "category": "Government Advisory",
-        "technology": "exploits",
-        "description": "US-CERT current security activities and alerts"
+    "vmware_blogs": {
+        "name": "VMware Blogs",
+        "url": "https://blogs.vmware.com/feed/",
+        "category": "Virtualization",
+        "technology": "vmware",
+        "description": "VMware product updates and technical articles"
     },
-    "cisa_advisories": {
-        "name": "CISA Security Advisories",
-        "url": "https://www.cisa.gov/uscert/ncas/alerts.xml",
-        "category": "Government Advisory",
-        "technology": "exploits",
-        "description": "CISA security advisories and alerts"
+    "redhat_blog": {
+        "name": "Red Hat Blog", 
+        "url": "https://www.redhat.com/en/rss/blog",
+        "category": "Linux Enterprise",
+        "technology": "redhat",
+        "description": "Red Hat enterprise Linux and OpenShift updates"
+    },
+    "rocky_linux": {
+        "name": "Rocky Linux News",
+        "url": "https://rockylinux.org/rss.xml",
+        "category": "Linux Distribution",
+        "technology": "rocky_linux", 
+        "description": "Rocky Linux distribution news and updates"
     }
 }
 
-# Mots-clés pour la classification fallback (AMÉLIORÉS)
+# Mots-clés pour classification - Technologies Business
 TECH_KEYWORDS = {
-    "exploits": [
-        "exploit", "vulnerability", "cve", "zero-day", "malware", "ransomware", 
-        "backdoor", "trojan", "botnet", "apt", "breach", "attack", "compromise",
-        "phishing", "injection", "overflow", "privilege escalation", "rce",
-        "remote code execution", "denial of service", "dos", "ddos", "critical",
-        "patch", "security advisory", "threat", "campaign", "actor", "attribution"
+    # CVE et sécurité générale (priorité maximale)
+    "cve": [
+        "cve-", "vulnerability", "exploit", "zero-day", "critical", "high severity",
+        "security advisory", "patch", "update", "hotfix", "security bulletin",
+        "remote code execution", "privilege escalation", "denial of service",
+        "authentication bypass", "information disclosure", "buffer overflow"
     ],
-    "fortinet": ["fortinet", "fortigate", "fortios", "fortianalyzer", "fortimanager", "fortimail", "fortiweb"],
-    "vmware": ["vmware", "vcenter", "vsphere", "esxi", "vsan", "nsx", "horizon", "workstation"],
-    "dell": ["dell", "emc", "poweredge", "idrac", "openmanage", "data domain", "unity"],
-    "microsoft": ["microsoft", "windows", "office", "exchange", "sharepoint", "azure", "active directory"],
-        "sentinelone": ["sentinelone", "sentinel one", "s1", "endpoint protection", "edr"],
-    "rubrik": ["rubrik", "data protection", "backup", "cyber recovery", "zero trust data security"],
-    "jumpcloud": ["jumpcloud", "jump cloud", "identity", "directory service", "ldap", "sso", "single sign-on"],
-    "ransomware": [
-        "ransomware", "crypto", "encryption", "ransom", "lockbit", "conti", "maze",
-        "ryuk", "sodinokibi", "revil", "darkside", "blackmatter", "hive", "royal"
+    
+    # Technologies utilisées dans le business
+    "office365": [
+        "office 365", "microsoft 365", "m365", "o365", "exchange online",
+        "sharepoint online", "teams", "outlook", "onedrive", "power platform",
+        "defender for office", "purview", "compliance center"
     ],
-    "malware": [
-        "malware", "virus", "worm", "spyware", "adware", "rootkit", "keylogger",
-        "stealer", "loader", "dropper", "rat", "remote access", "c2", "command control"
+    "windows": [
+        "windows server", "windows 10", "windows 11", "active directory",
+        "domain controller", "group policy", "powershell", "hyper-v",
+        "windows security", "defender", "wsus", "azure ad"
+    ],
+    "sentinelone": [
+        "sentinelone", "sentinel one", "s1", "endpoint detection", "edr",
+        "xdr", "autonomous security", "behavioral ai", "rollback", "threat hunting"
+    ],
+    "jumpcloud": [
+        "jumpcloud", "jump cloud", "directory service", "ldap", "radius",
+        "sso", "single sign-on", "identity management", "zero trust",
+        "device management", "policy management"
+    ],
+    "vmware": [
+        "vmware", "vsphere", "vcenter", "esxi", "vsan", "nsx", "horizon",
+        "workstation", "fusion", "vrealize", "cloud director", "tanzu"
+    ],
+    "fortinet": [
+        "fortinet", "fortigate", "fortiswitch", "fortiap", "fortiwifi",
+        "fortios", "fortianalyzer", "fortimanager", "fortiguard", "ssl vpn"
+    ],
+    "dell": [
+        "dell", "poweredge", "idrac", "openmanage", "equallogic", "compellent",
+        "dell emc", "unity", "powerstore", "data domain", "avamar"
+    ],
+    "redhat": [
+        "red hat", "redhat", "rhel", "centos", "fedora", "openshift",
+        "ansible", "satellite", "jboss", "middleware", "container platform"
+    ],
+    "rocky_linux": [
+        "rocky linux", "rocky", "enterprise linux", "centos alternative",
+        "rhel compatible", "alma linux", "oracle linux"
+    ],
+    "rubrik": [
+        "rubrik", "backup", "data protection", "cyber recovery", "zero trust",
+        "immutable backup", "ransomware recovery", "cloud data management"
     ]
 } 

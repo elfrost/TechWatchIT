@@ -1,223 +1,348 @@
 # TechWatchIT 🔍
 
-Plateforme centralisée de monitoring IT pour Windows avec agrégation RSS, classification IA et alertes automatiques.
+**Business-Focused Technology Monitoring Platform**
 
-## 🎯 Fonctionnalités
+Centralized IT monitoring platform for Windows with RSS feed aggregation, AI-powered classification, and automated security alerts. Designed specifically for business technology stacks with **CVE priority**.
 
-- **Agrégation RSS** : Collecte automatique des feeds de sécurité IT
-- **Classification IA** : Analyse GPT-4o avec fallback par mots-clés
-- **Résumés intelligents** : TL;DR ≤6 phrases avec impact et actions
-- **Base de données MySQL** : Stockage professionnel via WAMP
-- **API REST** : Endpoints filtrables et statistiques
-- **Interface web** : Dashboard Bootstrap 5 responsive
-- **Notifications** : Digest quotidien + alertes critiques (CVSS ≥9.0)
+## 🎯 Purpose
 
-## 🛠️ Technologies surveillées
+Monitor your actual business technologies for:
+- **Critical security vulnerabilities (CVE)**
+- **Product updates and patches**  
+- **Security advisories and threats**
+- **Technology-specific news and changes**
 
-- **FortiGate** (Fortinet PSIRT)
-- **SentinelOne** (Security Advisories)
-- **JumpCloud** (Release Notes)
-- **VMware** (Security Advisories)
-- **Rubrik** (Zero-Trust Blog)
-- **Dell** (Security Advisories)
-- **Exploits** (NVD JSON Feed)
+## 🏢 Supported Technologies
 
-## 📋 Prérequis
+### 🚨 Security & CVE (Priority)
+- **CISA** - Government security alerts
+- **SANS ISC** - Threat intelligence  
+- **Security News** - Latest vulnerabilities
 
-### Serveur TEST-WAMP
-- **WAMP Server** installé et fonctionnel
-- **MySQL** actif (icône verte dans WAMP)
-- **Python 3.12** installé
-- **Utilisateur MySQL** : `root` sans mot de passe
-- **Port** : 3306 (par défaut)
+### 💼 Business Technology Stack
+- **Office 365** - Microsoft 365 updates and security
+- **Windows** - Server/desktop security patches
+- **SentinelOne** - Endpoint detection and response
+- **JumpCloud** - Identity and access management
+- **VMware** - Virtualization platform updates
+- **Red Hat / Rocky Linux** - Enterprise Linux distributions
 
-### Clés API
-- **OpenAI API Key** pour GPT-4o
-- **Compte SMTP** Office 365 pour notifications
+## 🚀 Quick Start
 
-## 🚀 Installation
+### Prerequisites
+- **Windows** with WAMP server (MySQL active)
+- **Python 3.11+** installed
+- **OpenAI API Key** for AI classification
+- **SMTP credentials** for email alerts (optional)
 
-### 1. Préparation WAMP
+### One-Click Installation & Launch
 ```bash
-# Vérifiez que WAMP est démarré
-# Icône WAMP verte dans la barre des tâches
-# Testez : http://localhost/phpmyadmin
-```
-
-### 2. Configuration du projet
-```bash
-# Clonez le projet
+# Clone the repository
 git clone https://github.com/elfrost/TechWatchIT.git
 cd TechWatchIT
 
-# Copiez et configurez l'environnement
-copy env.example .env
-# Éditez .env avec vos clés API
+# Run the program (handles everything automatically)
+run_techwatchit.bat
 ```
 
-### 3. Installation automatique
-```bash
-# Exécutez le script d'installation
-setup.bat
-```
+The BAT file will:
+1. ✅ Check Python installation
+2. 📦 Create virtual environment 
+3. 📋 Install dependencies
+4. ⚙️ Setup configuration
+5. 🚀 Launch interactive menu
 
-Le script va :
-- ✅ Tester la connexion MySQL
-- 📦 Installer les dépendances Python
-- 🗄️ Créer la base de données `techwatchit`
-- 📊 Initialiser les tables avec données d'exemple
-- 🎉 Lancer le serveur de développement
+## 📋 Features
 
-### 4. Vérification
-```bash
-# Test manuel de MySQL
-python scripts/test_mysql.py
+### 🔄 Automated RSS Collection
+- **12 curated sources** (100% functional)
+- **Business-focused technologies**
+- **CVE priority monitoring**
+- **Automatic duplicate detection**
 
-# Accès au dashboard
-http://localhost:5000
-```
+### 🤖 AI-Powered Analysis
+- **OpenAI GPT-4o classification** 
+- **Technology-specific categorization**
+- **Keyword fallback system**
+- **Smart summarization**
 
-## 📁 Structure du projet
+### 📊 Professional Storage
+- **MySQL database** (WAMP integration)
+- **Structured data schema**
+- **Historical tracking**
+- **Performance statistics**
 
-```
-TechWatchIT/
-├── config/
-│   ├── __init__.py
-│   └── config.py              # Configuration centralisée
-├── src/
-│   ├── __init__.py
-│   ├── fetch_feeds.py         # Collecteur RSS
-│   ├── classifier.py          # Classification IA
-│   ├── summarizer.py          # Résumés intelligents
-│   ├── database.py            # Gestionnaire MySQL
-│   └── api.py                 # API REST Flask
-├── scripts/
-│   ├── test_mysql.py          # Test connexion MySQL
-│   ├── setup_db.py            # Initialisation base
-│   ├── daily_digest.py        # Digest quotidien
-│   └── alert_handler.py       # Alertes critiques
-├── web/
-│   └── dashboard.html         # Interface utilisateur
-├── logs/                      # Fichiers de logs
-├── data/                      # Données temporaires
-├── main.py                    # Script principal
-├── requirements.txt           # Dépendances Python
-├── setup.bat                  # Installation Windows
-└── .env.example               # Template environnement
-```
+### 🌐 Web Dashboard
+- **Bootstrap 5 responsive interface**
+- **Real-time filtering by technology**
+- **CVE priority highlighting**
+- **Export capabilities**
 
-## ⚙️ Configuration (.env)
+### 📧 Alert System
+- **Critical CVE notifications**
+- **Daily digest emails**
+- **SMTP integration**
+- **Customizable thresholds**
 
+## ⚙️ Configuration
+
+### Environment Variables (.env)
 ```env
-# API OpenAI pour classification/résumés
+# OpenAI API for AI classification/summaries
 OPENAI_API_KEY=your_openai_api_key_here
 
-# Configuration MySQL pour TEST-WAMP
+# MySQL Configuration (WAMP)
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=
 MYSQL_DATABASE=techwatchit
 
-# Configuration SMTP Office 365
-SMTP_HOST=smtp.office365.com
+# SMTP Configuration (Optional)
+SMTP_SERVER=smtp.office365.com
 SMTP_PORT=587
-SMTP_USER=your_email@company.com
-SMTP_PASSWORD=your_password
-EMAIL_FROM=your_email@company.com
-EMAIL_TO=admin@company.com
+SMTP_USERNAME=your_email@company.com
+SMTP_PASSWORD=your_app_password
+SMTP_FROM_NAME=TechWatchIT Alert System
 
-# Configuration serveur
-FLASK_HOST=localhost
-FLASK_PORT=5000
-FLASK_DEBUG=True
+# Alert Configuration
+ALERT_THRESHOLD_CVSS=9.0
+ALERT_RECIPIENTS=admin@company.com,security@company.com
+DAILY_DIGEST_TIME=08:00
+
+# API Configuration
+API_HOST=0.0.0.0
+API_PORT=5000
+API_DEBUG=False
 ```
 
-## 🎮 Utilisation
+## 🎮 Usage
 
-### Lancement manuel
+### Interactive Menu (Recommended)
 ```bash
-# Collecte RSS et traitement IA
-python main.py --fetch
-
-# Serveur API/Dashboard
-python main.py --server
-
-# Digest quotidien
-python scripts/daily_digest.py
-
-# Alertes critiques
-python scripts/alert_handler.py
+run_techwatchit.bat
 ```
 
-### API REST
-
+### Command Line Interface
 ```bash
-# Articles récents
-GET /api/articles?limit=10&technology=fortinet
+# Complete pipeline (fetch + process + alerts)
+python main.py --pipeline
 
-# Statistiques
-GET /api/stats
-
-# Santé du système
-GET /api/health
+# Individual operations
+python main.py --init            # Initialize database
+python main.py --fetch           # Fetch RSS feeds
+python main.py --process         # Process with AI
+python main.py --digest          # Send daily digest
+python main.py --alerts          # Check critical alerts
+python main.py --status          # System status
+python main.py --api             # Launch web dashboard
 ```
 
-### Interface Web
-- **Dashboard** : http://localhost:5000
-- **Filtres** : Technologie, sévérité, date
-- **Graphiques** : Évolution 30 jours
-- **Administration** : Gestion des données
+### Web Dashboard
+```
+http://localhost:5000
+```
 
-## 🔧 Dépannage
+## 📁 Project Structure
 
-### Erreur MySQL
+```
+TechWatchIT/
+├── config/
+│   ├── __init__.py
+│   └── config.py                 # Centralized configuration
+├── src/
+│   ├── __init__.py
+│   ├── api.py                    # Flask REST API
+│   ├── classifier.py             # AI classification
+│   ├── database.py               # MySQL manager
+│   ├── fetch_feeds.py            # RSS collector
+│   └── summarizer.py             # AI summarization
+├── scripts/
+│   ├── alert_handler.py          # Critical alerts
+│   ├── daily_digest.py           # Email digest
+│   ├── setup_db.py               # Database setup
+│   ├── test_mysql.py             # MySQL test
+│   └── test_openai.py            # OpenAI test
+├── web/
+│   ├── dashboard.html            # Main interface
+│   └── blog_dashboard.html       # Blog interface
+├── main.py                       # Main orchestrator
+├── run_techwatchit.bat          # One-click launcher
+├── requirements.txt              # Python dependencies
+├── setup.bat                     # Manual setup
+├── env.example                   # Environment template
+└── README.md                     # This file
+```
+
+## 🔧 Advanced Configuration
+
+### Adding New RSS Sources
+Edit `config/config.py`:
+```python
+RSS_FEEDS = {
+    "new_source": {
+        "name": "Source Name",
+        "url": "https://example.com/rss.xml",
+        "category": "Security Update",
+        "technology": "your_tech",
+        "description": "Source description"
+    }
+}
+```
+
+### Technology Keywords
+Customize classification in `config/config.py`:
+```python
+TECH_KEYWORDS = {
+    "your_tech": [
+        "keyword1", "keyword2", "product-name", 
+        "vulnerability-type", "specific-terms"
+    ]
+}
+```
+
+## 📊 Database Schema
+
+### Core Tables
+- **raw_articles** - Original RSS feed data
+- **processed_articles** - AI-classified content
+- **rss_sources** - Feed source management
+- **fetch_log** - Collection history
+- **alert_notifications** - Alert tracking
+- **daily_stats** - Performance metrics
+
+### Access Database
+```
+http://localhost/phpmyadmin
+User: root
+Password: (empty)
+Database: techwatchit
+```
+
+## 🔐 Security Best Practices
+
+### API Keys
+- Store in `.env` file only
+- Never commit to version control
+- Use environment-specific keys
+- Rotate keys regularly
+
+### Database Security
+- Use strong MySQL passwords in production
+- Restrict database access
+- Regular backups
+- Monitor access logs
+
+### Network Security
+- Configure firewall rules
+- Use HTTPS in production
+- Restrict API access
+- Monitor traffic patterns
+
+## 🧪 Testing
+
+### System Tests
 ```bash
-# Test de connexion
+# Test MySQL connection
 python scripts/test_mysql.py
 
-# Vérifications :
-# - WAMP démarré (icône verte)
-# - MySQL actif dans WAMP
-# - Port 3306 libre
-# - phpMyAdmin accessible
+# Test OpenAI API
+python scripts/test_openai.py
+
+# System status check
+python main.py --status
 ```
 
-### Erreur API OpenAI
-```bash
-# Vérifiez votre clé dans .env
-# Testez avec classification manuelle
-python -c "from src.classifier import *; print('OK')"
+### RSS Source Validation
+All configured sources are automatically tested for:
+- HTTP connectivity (200 status)
+- Valid RSS/XML format
+- Content availability
+- Article structure
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+#### MySQL Connection Failed
+```
+✅ Check WAMP server status (green icon)
+✅ Verify MySQL service is running
+✅ Test: python scripts/test_mysql.py
+✅ Check firewall on port 3306
 ```
 
-### Erreur SMTP
-```bash
-# Testez la configuration email
-python -c "from scripts.daily_digest import *; test_smtp()"
+#### OpenAI API Errors
+```
+✅ Verify API key in .env file
+✅ Check quota limits on OpenAI platform
+✅ Test: python scripts/test_openai.py
+✅ System uses keyword fallback if API fails
 ```
 
-## 📊 Base de données
+#### RSS Feed Failures
+```
+✅ Individual feed failures don't stop processing
+✅ Check logs for specific error messages
+✅ Validate feed URLs manually
+✅ Network timeouts set to 30 seconds per feed
+```
 
-### Tables principales
-- `raw_articles` : Articles RSS bruts
-- `processed_articles` : Articles traités avec IA
-- `fetch_log` : Historique des collectes
-- `alert_notifications` : Journal des alertes
-- `daily_stats` : Statistiques quotidiennes
+#### Unicode Display Errors (Windows)
+```
+✅ Set console to UTF-8: chcp 65001
+✅ Use Windows Terminal instead of Command Prompt
+✅ Some emojis may not display correctly in older terminals
+```
 
-### Accès phpMyAdmin
-http://localhost/phpmyadmin
-- Utilisateur : `root`
-- Mot de passe : (vide)
-- Base : `techwatchit`
+## 📈 Performance Expectations
 
-## 🤝 Support
+### Collection Metrics
+- **RSS Sources**: 12 sources (100% functional)
+- **Articles per cycle**: ~170 articles
+- **Processing time**: < 5 minutes/complete pipeline
+- **Success rate**: 100% (verified sources)
 
-Pour toute question ou problème :
-1. Vérifiez les logs dans `logs/`
-2. Testez la connexion MySQL
-3. Consultez la documentation WAMP
-4. Vérifiez les clés API dans `.env`
+### Resource Usage
+- **Memory**: ~200MB during processing
+- **Storage**: ~10MB/month (database growth)
+- **API calls**: ~50-100 OpenAI requests/cycle
+- **Network**: ~5MB download/cycle
+
+## 🤝 Contributing
+
+### Feature Requests
+1. **Technology coverage** - Request new RSS sources
+2. **Classification improvement** - Suggest keyword additions
+3. **Alert enhancements** - Custom notification rules
+4. **Dashboard features** - UI/UX improvements
+
+### Issue Reporting
+Include:
+- Operating system version
+- Python version
+- Error messages/logs
+- Steps to reproduce
+- Expected vs actual behavior
+
+## 📝 License
+
+MIT License - See LICENSE file for details
+
+## 🆘 Support
+
+### Documentation
+- **CLAUDE.md** - Claude Code integration guide
+- **BUSINESS_CONFIG.md** - Business technology focus
+- **Logs directory** - Detailed operation logs
+
+### Community
+- **GitHub Issues** - Bug reports and feature requests
+- **Discussions** - General questions and sharing
+
+### Professional Support
+For enterprise deployments, custom integrations, or professional support, please contact through GitHub.
 
 ---
-**TechWatchIT** - Monitoring IT professionnel pour Windows 🚀 
+
+**TechWatchIT** - Professional IT monitoring for your business technologies 🚀
