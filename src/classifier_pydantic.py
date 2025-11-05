@@ -14,7 +14,9 @@ from src.models import (
     ArticleClassification,
     TechnologyType,
     SeverityLevel,
-    CategoryType
+    CategoryType,
+    ContextType,
+    determine_context
 )
 from src.classifier import ArticleClassifier
 
@@ -65,9 +67,12 @@ class PydanticClassifier:
                 confidence_score=0.85  # Score moyen pour classification legacy
             )
 
+            # Déterminer automatiquement le contexte métier
+            classification.context_type = determine_context(classification)
+
             logger.info(
                 f"Classification Pydantic: {classification.technology.value} "
-                f"({classification.severity_level.value})"
+                f"({classification.severity_level.value}) -> Contexte: {classification.context_type.value}"
             )
 
             return classification

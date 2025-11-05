@@ -40,6 +40,14 @@ class CategoryType(str, Enum):
     NEWS = "news"
 
 
+class ContextType(str, Enum):
+    """Contextes métier pour la séparation des articles"""
+    VEILLE_TECHNO = "veille_techno"  # Releases/news de nos technologies
+    CVE_VULNERABILITES = "cve_vulnerabilites"  # CVE de nos technologies
+    EXPLOITS_MENACES = "exploits_menaces"  # Exploits actifs, menaces générales
+    ACTUALITES_IT = "actualites_it"  # Actualités IT générales
+
+
 class ArticleClassification(BaseModel):
     """
     Classification structurée d'un article de veille IT
@@ -97,6 +105,11 @@ class ArticleClassification(BaseModel):
         ge=0.0,
         le=1.0,
         description="Niveau de confiance de la classification (0-1)"
+    )
+
+    context_type: Optional[ContextType] = Field(
+        None,
+        description="Contexte métier déterminé automatiquement"
     )
 
     @field_validator('severity_score')
@@ -315,3 +328,65 @@ if __name__ == "__main__":
     print("\n✅ Auto-correction appliquée:")
     print(f"Score corrigé: {classification_bad.severity_score} (devrait être >= 8.0)")
     print(f"CVE filtrés: {classification_bad.cve_references} (invalides supprimés)")
+
+
+def determine_context(classification: ArticleClassification) -> ContextType:
+    """
+    Détermine automatiquement le contexte métier d'un article
+    basé sur sa classification (technology, category, severity, CVE).
+
+    Logique de séparation:
+    1. Veille Techno: Releases/news de NOS technologies (sévérité low/medium, pas de CVE)
+    2. CVE et Vulnérabilités: CVE de NOS technologies (présence de CVE ou category vulnerability)
+    3. Exploits et Menaces: Exploits généraux OU alertes critiques (technology=exploits OU critical)
+    4. Actualités IT: Tout le reste (technology=other, news générales)
+
+    Args:
+        classification: Objet ArticleClassification à analyser
+
+    Returns:
+        ContextType: Le contexte métier approprié
+    """
+    tech = classification.technology
+    cat = classification.category
+    sev = classification.severity_level
+    has_cve = len(classification.cve_references) > 0
+    is_alert = classification.is_security_alert
+
+    # Liste des technologies que l'on surveille (NOS technologies)
+    our_technologies = [
+        TechnologyType.FORTINET,
+        TechnologyType.SENTINELONE,
+        TechnologyType.JUMPCLOUD,
+        TechnologyType.VMWARE,
+        TechnologyType.RUBRIK,
+        TechnologyType.DELL,
+        TechnologyType.MICROSOFT
+    ]
+
+    # Contexte 3: Exploits et Menaces (prioritaire)
+    # - Technology = exploits OU
+    # - Sévérité critical + alerte de sécurité
+    if tech == TechnologyType.EXPLOITS:
+        return ContextType.EXPLOITS_MENACES
+
+    if sev == SeverityLevel.CRITICAL and is_alert:
+        return ContextType.EXPLOITS_MENACES
+
+    # Contexte 2: CVE et Vulnérabilités (de NOS technologies)
+    # - Présence de CVE OU
+    # - Catégorie vulnerability/security + notre techno
+    if tech in our_technologies:
+        if has_cve or cat in [CategoryType.VULNERABILITY, CategoryType.SECURITY, CategoryType.PATCH]:
+            return ContextType.CVE_VULNERABILITES
+
+    # Contexte 1: Veille Technologique (de NOS technologies)
+    # - Nos technologies + catégorie produit/update/news + sévérité faible
+    if tech in our_technologies:
+        if cat in [CategoryType.PRODUCT, CategoryType.UPDATE, CategoryType.NEWS]:
+            if sev in [SeverityLevel.LOW, SeverityLevel.MEDIUM]:
+                return ContextType.VEILLE_TECHNO
+
+    # Contexte 4: Actualités IT (par défaut)
+    # - Tout le reste (technology=other ou ne correspond à aucun autre contexte)
+    return ContextType.ACTUALITES_IT

@@ -106,13 +106,16 @@ class DatabaseManager:
                     impact_analysis TEXT,
                     action_required TEXT,
                     is_security_alert BOOLEAN DEFAULT FALSE,
+                    context_type ENUM('veille_techno', 'cve_vulnerabilites', 'exploits_menaces', 'actualites_it') DEFAULT 'actualites_it',
                     processed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (raw_article_id) REFERENCES raw_articles(id) ON DELETE CASCADE,
                     INDEX idx_category (category),
                     INDEX idx_technology (technology),
                     INDEX idx_severity_level (severity_level),
                     INDEX idx_cvss_score (cvss_score),
-                    INDEX idx_security_alert (is_security_alert)
+                    INDEX idx_security_alert (is_security_alert),
+                    INDEX idx_context_type (context_type),
+                    INDEX idx_context_severity (context_type, severity_level, processed_at)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
                 ''')
                 
@@ -232,10 +235,10 @@ class DatabaseManager:
                 cursor = conn.cursor()
                 
                 cursor.execute('''
-                INSERT INTO processed_articles 
-                (raw_article_id, category, technology, severity_level, severity_score, 
-                 cvss_score, summary, impact_analysis, action_required, is_security_alert)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO processed_articles
+                (raw_article_id, category, technology, severity_level, severity_score,
+                 cvss_score, summary, impact_analysis, action_required, is_security_alert, context_type)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON DUPLICATE KEY UPDATE
                 category = VALUES(category),
                 technology = VALUES(technology),
@@ -246,6 +249,7 @@ class DatabaseManager:
                 impact_analysis = VALUES(impact_analysis),
                 action_required = VALUES(action_required),
                 is_security_alert = VALUES(is_security_alert),
+                context_type = VALUES(context_type),
                 processed_at = CURRENT_TIMESTAMP
                 ''', (
                     raw_article_id,
@@ -257,7 +261,8 @@ class DatabaseManager:
                     processed_data.get('summary', ''),
                     processed_data.get('impact_analysis', ''),
                     processed_data.get('action_required', ''),
-                    processed_data.get('is_security_alert', False)
+                    processed_data.get('is_security_alert', False),
+                    processed_data.get('context_type', 'actualites_it')
                 ))
                 
                 conn.commit()
