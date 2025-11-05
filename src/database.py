@@ -279,12 +279,12 @@ class DatabaseManager:
                 cursor = conn.cursor()
                 
                 base_query = '''
-                SELECT 
-                    r.id, r.feed_source, r.title, r.link, r.description, 
+                SELECT
+                    r.id, r.feed_source, r.title, r.link, r.description,
                     r.published_date, r.tags, r.created_at,
                     p.category, p.technology, p.severity_level, p.severity_score,
                     p.cvss_score, p.summary, p.impact_analysis, p.action_required,
-                    p.is_security_alert, p.processed_at
+                    p.is_security_alert, p.context_type, p.processed_at
                 FROM raw_articles r
                 LEFT JOIN processed_articles p ON r.id = p.raw_article_id
                 WHERE 1=1
@@ -296,18 +296,22 @@ class DatabaseManager:
                     if filters.get('category'):
                         base_query += ' AND p.category = %s'
                         params.append(filters['category'])
-                    
+
                     if filters.get('technology'):
                         base_query += ' AND p.technology = %s'
                         params.append(filters['technology'])
-                    
+
                     if filters.get('severity'):
                         base_query += ' AND p.severity_level = %s'
                         params.append(filters['severity'])
-                    
+
+                    if filters.get('context_type'):
+                        base_query += ' AND p.context_type = %s'
+                        params.append(filters['context_type'])
+
                     if filters.get('security_alerts_only'):
                         base_query += ' AND p.is_security_alert = TRUE'
-                    
+
                     if filters.get('days_back'):
                         base_query += ' AND r.published_date >= %s'
                         date_limit = datetime.now() - timedelta(days=int(filters['days_back']))

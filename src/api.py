@@ -284,6 +284,144 @@ def get_stats_summary():
         }), 500
 
 # ================================
+# ROUTES API CONTEXTES
+# ================================
+
+@app.route('/api/articles/by-context/<context_type>', methods=['GET'])
+def get_articles_by_context(context_type):
+    """
+    Récupérer les articles d'un contexte spécifique
+
+    Contextes disponibles:
+    - veille_techno: Releases et updates de nos technologies
+    - cve_vulnerabilites: CVE affectant nos technologies
+    - exploits_menaces: Exploits actifs et menaces critiques
+    - actualites_it: Actualités IT générales
+
+    Paramètres:
+    - technology: filtrer par technologie
+    - severity: filtrer par sévérité
+    - days_back: nombre de jours (défaut: 30)
+    - limit: nombre max d'articles (défaut: 50)
+    """
+    try:
+        # Valider le contexte
+        valid_contexts = ['veille_techno', 'cve_vulnerabilites', 'exploits_menaces', 'actualites_it']
+        if context_type not in valid_contexts:
+            return jsonify({
+                'success': False,
+                'error': f'Contexte invalide. Valeurs possibles: {", ".join(valid_contexts)}'
+            }), 400
+
+        # Récupérer les paramètres
+        filters = {
+            'context_type': context_type,
+            'days_back': int(request.args.get('days_back', 30)),
+            'limit': int(request.args.get('limit', 50))
+        }
+
+        if request.args.get('technology'):
+            filters['technology'] = request.args.get('technology')
+
+        if request.args.get('severity'):
+            filters['severity'] = request.args.get('severity')
+
+        # Récupérer les articles avec le filtre context_type
+        articles = db.get_articles(filters)
+
+        # Formater les dates
+        local_tz = pytz.timezone('America/Toronto')
+        utc_tz = pytz.utc
+
+        for article in articles:
+            if article.get('published_date'):
+                published_date_utc = utc_tz.localize(article['published_date'])
+                published_date_local = published_date_utc.astimezone(local_tz)
+                article['published_date'] = published_date_local.isoformat()
+
+            if article.get('processed_at'):
+                processed_at_utc = utc_tz.localize(article['processed_at'])
+                processed_at_local = processed_at_utc.astimezone(local_tz)
+                article['processed_at'] = processed_at_local.isoformat()
+
+        return jsonify({
+            'success': True,
+            'context': context_type,
+            'count': len(articles),
+            'filters': filters,
+            'articles': articles
+        })
+
+    except Exception as e:
+        logger.error(f"Erreur API articles by context: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/contexts/stats', methods=['GET'])
+def get_contexts_stats():
+    """
+    Récupérer les statistiques par contexte
+
+    Retourne le nombre d'articles par contexte pour les X derniers jours
+    """
+    try:
+        days = int(request.args.get('days', 7))
+
+        # Requête pour compter par contexte
+        with db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT
+                    context_type,
+                    COUNT(*) as count,
+                    SUM(CASE WHEN severity_level = 'critical' THEN 1 ELSE 0 END) as critical_count,
+                    SUM(CASE WHEN severity_level = 'high' THEN 1 ELSE 0 END) as high_count,
+                    SUM(CASE WHEN is_security_alert = 1 THEN 1 ELSE 0 END) as security_alerts
+                FROM processed_articles
+                WHERE processed_at >= DATE_SUB(NOW(), INTERVAL %s DAY)
+                GROUP BY context_type
+            ''', (days,))
+
+            results = cursor.fetchall()
+
+        # Organiser les résultats
+        stats = {
+            'veille_techno': {'count': 0, 'critical': 0, 'high': 0, 'alerts': 0},
+            'cve_vulnerabilites': {'count': 0, 'critical': 0, 'high': 0, 'alerts': 0},
+            'exploits_menaces': {'count': 0, 'critical': 0, 'high': 0, 'alerts': 0},
+            'actualites_it': {'count': 0, 'critical': 0, 'high': 0, 'alerts': 0}
+        }
+
+        total = 0
+        for row in results:
+            context = row['context_type']
+            if context in stats:
+                stats[context] = {
+                    'count': row['count'],
+                    'critical': row['critical_count'],
+                    'high': row['high_count'],
+                    'alerts': row['security_alerts']
+                }
+                total += row['count']
+
+        return jsonify({
+            'success': True,
+            'period_days': days,
+            'total_articles': total,
+            'by_context': stats
+        })
+
+    except Exception as e:
+        logger.error(f"Erreur API contexts stats: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# ================================
 # ROUTES ADMINISTRATIVES
 # ================================
 
@@ -390,6 +528,14 @@ def dashboard():
     """Page dashboard web"""
     try:
         return send_from_directory('../web', 'dashboard.html')
+    except Exception as e:
+        return f"Erreur: {str(e)}", 500
+
+@app.route('/contextes')
+def dashboard_contextes():
+    """Dashboard par contextes métier"""
+    try:
+        return send_from_directory('../web', 'dashboard_contextes.html')
     except Exception as e:
         return f"Erreur: {str(e)}", 500
 

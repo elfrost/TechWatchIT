@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechWatchIT - Dashboard par Contextes</title>
+
+    <!-- CSS Frameworks -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-veille: #3498db;
+            --color-cve: #e67e22;
+            --color-exploits: #e74c3c;
+            --color-actualites: #27ae60;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .context-section {
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .context-header {
+            padding: 1.5rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .context-header:hover {
+            filter: brightness(110%);
+        }
+
+        .veille-techno { background: linear-gradient(135deg, var(--color-veille) 0%, #2980b9 100%); }
+        .cve-vulnerabilites { background: linear-gradient(135deg, var(--color-cve) 0%, #d35400 100%); }
+        .exploits-menaces { background: linear-gradient(135deg, var(--color-exploits) 0%, #c0392b 100%); }
+        .actualites-it { background: linear-gradient(135deg, var(--color-actualites) 0%, #229954 100%); }
+
+        .context-body {
+            background: white;
+            padding: 1.5rem;
+        }
+
+        .article-card {
+            border-left: 4px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .article-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .article-card.critical { border-left-color: #e74c3c; }
+        .article-card.high { border-left-color: #e67e22; }
+        .article-card.medium { border-left-color: #f39c12; }
+        .article-card.low { border-left-color: #27ae60; }
+
+        .badge-tech {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-severity {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .severity-critical { background: #e74c3c; color: white; }
+        .severity-high { background: #e67e22; color: white; }
+        .severity-medium { background: #f39c12; color: white; }
+        .severity-low { background: #27ae60; color: white; }
+
+        .stats-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .filter-bar {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .collapse-toggle {
+            transition: transform 0.3s;
+        }
+
+        .collapsed .collapse-toggle {
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark mb-4">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-chart-line me-2"></i>
+                TechWatchIT - Dashboard par Contextes
+            </span>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3">
+                    <i class="fas fa-clock me-1"></i>
+                    <span id="lastUpdate">Chargement...</span>
+                </span>
+                <button class="btn btn-light btn-sm" onclick="loadAll()">
+                    <i class="fas fa-sync-alt me-1"></i>
+                    Actualiser
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <!-- Filtres -->
+        <div class="filter-bar">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <label class="form-label mb-1"><small>Période</small></label>
+                    <select id="daysFilter" class="form-select form-select-sm" onchange="loadAll()">
+                        <option value="7" selected>7 derniers jours</option>
+                        <option value="14">14 derniers jours</option>
+                        <option value="30">30 derniers jours</option>
+                        <option value="90">90 derniers jours</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-1"><small>Technologie</small></label>
+                    <select id="techFilter" class="form-select form-select-sm" onchange="loadAll()">
+                        <option value="">Toutes</option>
+                        <option value="microsoft">Microsoft</option>
+                        <option value="vmware">VMware</option>
+                        <option value="fortinet">Fortinet</option>
+                        <option value="sentinelone">SentinelOne</option>
+                        <option value="jumpcloud">JumpCloud</option>
+                        <option value="dell">Dell</option>
+                        <option value="rubrik">Rubrik</option>
+                        <option value="exploits">Exploits</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-1"><small>Sévérité</small></label>
+                    <select id="severityFilter" class="form-select form-select-sm" onchange="loadAll()">
+                        <option value="">Toutes</option>
+                        <option value="critical">Critique</option>
+                        <option value="high">Élevée</option>
+                        <option value="medium">Moyenne</option>
+                        <option value="low">Faible</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label mb-1"><small>Actions</small></label>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary" onclick="expandAll()">
+                            <i class="fas fa-expand-alt me-1"></i> Tout afficher
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">
+                            <i class="fas fa-compress-alt me-1"></i> Tout réduire
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques globales -->
+        <div class="row mb-4" id="statsRow">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3 id="totalCount" class="mb-0">-</h3>
+                        <small class="text-muted">Total Articles</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-danger">
+                    <div class="card-body">
+                        <h3 id="criticalCount" class="mb-0 text-danger">-</h3>
+                        <small class="text-muted">Critiques</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-warning">
+                    <div class="card-body">
+                        <h3 id="highCount" class="mb-0 text-warning">-</h3>
+                        <small class="text-muted">Élevés</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-info">
+                    <div class="card-body">
+                        <h3 id="alertsCount" class="mb-0 text-info">-</h3>
+                        <small class="text-muted">Alertes Sécurité</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Veille Technologique -->
+        <div class="context-section" id="veille-techno-section">
+            <div class="context-header veille-techno" onclick="toggleContext('veille-techno')">
+                <div>
+                    <h4 class="mb-0">
+                        <i class="fas fa-box me-2"></i>
+                        Veille Technologique
+                    </h4>
+                    <small>Releases et updates de nos technologies</small>
+                </div>
+                <div>
+                    <span class="stats-badge me-2" id="veille-techno-count">0 articles</span>
+                    <i class="fas fa-chevron-down collapse-toggle"></i>
+                </div>
+            </div>
+            <div class="context-body" id="veille-techno-body">
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: CVE et Vulnérabilités -->
+        <div class="context-section" id="cve-vulnerabilites-section">
+            <div class="context-header cve-vulnerabilites" onclick="toggleContext('cve-vulnerabilites')">
+                <div>
+                    <h4 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        CVE et Vulnérabilités
+                    </h4>
+                    <small>CVE affectant nos technologies</small>
+                </div>
+                <div>
+                    <span class="stats-badge me-2" id="cve-vulnerabilites-count">0 articles</span>
+                    <i class="fas fa-chevron-down collapse-toggle"></i>
+                </div>
+            </div>
+            <div class="context-body" id="cve-vulnerabilites-body">
+                <div class="loading-spinner">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Exploits et Menaces -->
+        <div class="context-section" id="exploits-menaces-section">
+            <div class="context-header exploits-menaces" onclick="toggleContext('exploits-menaces')">
+                <div>
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Exploits et Menaces Actives
+                    </h4>
+                    <small>Exploits actifs, ransomware, zero-days</small>
+                </div>
+                <div>
+                    <span class="stats-badge me-2" id="exploits-menaces-count">0 articles</span>
+                    <i class="fas fa-chevron-down collapse-toggle"></i>
+                </div>
+            </div>
+            <div class="context-body" id="exploits-menaces-body">
+                <div class="loading-spinner">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Actualités IT -->
+        <div class="context-section" id="actualites-it-section">
+            <div class="context-header actualites-it" onclick="toggleContext('actualites-it')">
+                <div>
+                    <h4 class="mb-0">
+                        <i class="fas fa-newspaper me-2"></i>
+                        Actualités IT Générales
+                    </h4>
+                    <small>Big news IT, tendances et analyses</small>
+                </div>
+                <div>
+                    <span class="stats-badge me-2" id="actualites-it-count">0 articles</span>
+                    <i class="fas fa-chevron-down collapse-toggle"></i>
+                </div>
+            </div>
+            <div class="context-body" id="actualites-it-body">
+                <div class="loading-spinner">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = '/api';
+        const contexts = ['veille-techno', 'cve-vulnerabilites', 'exploits-menaces', 'actualites-it'];
+
+        // État des sections (ouvertes/fermées)
+        const sectionsState = {
+            'veille-techno': true,
+            'cve-vulnerabilites': true,
+            'exploits-menaces': true,
+            'actualites-it': true
+        };
+
+        // Charger toutes les sections
+        async function loadAll() {
+            document.getElementById('lastUpdate').textContent = 'Actualisation...';
+
+            // Charger les stats globales
+            await loadGlobalStats();
+
+            // Charger chaque contexte
+            for (const context of contexts) {
+                await loadContext(context);
+            }
+
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('fr-FR');
+        }
+
+        // Charger les stats globales
+        async function loadGlobalStats() {
+            try {
+                const days = document.getElementById('daysFilter').value;
+                const response = await fetch(`${API_BASE}/contexts/stats?days=${days}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalCount').textContent = data.total_articles;
+
+                    let totalCritical = 0;
+                    let totalHigh = 0;
+                    let totalAlerts = 0;
+
+                    for (const ctx of contexts) {
+                        const contextKey = ctx.replace(/-/g, '_');
+                        const stats = data.by_context[contextKey];
+                        totalCritical += stats.critical;
+                        totalHigh += stats.high;
+                        totalAlerts += stats.alerts;
+                    }
+
+                    document.getElementById('criticalCount').textContent = totalCritical;
+                    document.getElementById('highCount').textContent = totalHigh;
+                    document.getElementById('alertsCount').textContent = totalAlerts;
+                }
+            } catch (error) {
+                console.error('Erreur chargement stats:', error);
+            }
+        }
+
+        // Charger un contexte
+        async function loadContext(context) {
+            const contextKey = context.replace(/-/g, '_');
+            const bodyElement = document.getElementById(`${context}-body`);
+            const countElement = document.getElementById(`${context}-count`);
+
+            try {
+                const days = document.getElementById('daysFilter').value;
+                const tech = document.getElementById('techFilter').value;
+                const severity = document.getElementById('severityFilter').value;
+
+                let url = `${API_BASE}/articles/by-context/${contextKey}?days_back=${days}&limit=50`;
+                if (tech) url += `&technology=${tech}`;
+                if (severity) url += `&severity=${severity}`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    countElement.textContent = `${data.count} articles`;
+
+                    if (data.articles.length === 0) {
+                        bodyElement.innerHTML = '<div class="empty-state"><i class="fas fa-inbox fa-3x mb-3 text-muted"></i><p>Aucun article pour ce contexte</p></div>';
+                    } else {
+                        bodyElement.innerHTML = renderArticles(data.articles);
+                    }
+                }
+            } catch (error) {
+                console.error(`Erreur chargement ${context}:`, error);
+                bodyElement.innerHTML = '<div class="alert alert-danger">Erreur de chargement</div>';
+            }
+        }
+
+        // Render articles
+        function renderArticles(articles) {
+            return articles.map(article => {
+                const severityClass = article.severity_level || 'medium';
+                const techBadge = article.technology ? `<span class="badge-tech bg-secondary">${article.technology}</span>` : '';
+                const date = article.published_date ? new Date(article.published_date).toLocaleDateString('fr-FR') : '';
+
+                return `
+                    <div class="article-card ${severityClass}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">
+                                <a href="${article.link}" target="_blank" class="text-decoration-none text-dark">
+                                    ${article.title}
+                                </a>
+                            </h6>
+                            <span class="badge-severity severity-${severityClass}">${severityClass}</span>
+                        </div>
+                        <p class="text-muted mb-2 small">${article.description || article.summary || 'Pas de description'}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                ${techBadge}
+                                <small class="text-muted ms-2">
+                                    <i class="fas fa-calendar me-1"></i>${date}
+                                </small>
+                            </div>
+                            ${article.is_security_alert ? '<span class="badge bg-danger">Alerte Sécurité</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle section
+        function toggleContext(context) {
+            const section = document.getElementById(`${context}-section`);
+            const body = document.getElementById(`${context}-body`);
+
+            sectionsState[context] = !sectionsState[context];
+
+            if (sectionsState[context]) {
+                body.style.display = 'block';
+                section.classList.remove('collapsed');
+            } else {
+                body.style.display = 'none';
+                section.classList.add('collapsed');
+            }
+        }
+
+        // Expand all
+        function expandAll() {
+            contexts.forEach(ctx => {
+                sectionsState[ctx] = true;
+                document.getElementById(`${ctx}-body`).style.display = 'block';
+                document.getElementById(`${ctx}-section`).classList.remove('collapsed');
+            });
+        }
+
+        // Collapse all
+        function collapseAll() {
+            contexts.forEach(ctx => {
+                sectionsState[ctx] = false;
+                document.getElementById(`${ctx}-body`).style.display = 'none';
+                document.getElementById(`${ctx}-section`).classList.add('collapsed');
+            });
+        }
+
+        // Charger au démarrage
+        document.addEventListener('DOMContentLoaded', loadAll);
+
+        // Auto-refresh toutes les 5 minutes
+        setInterval(loadAll, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
