@@ -38,6 +38,9 @@ venv.bak/
 # IDE
 .vscode/
 .idea/
+.cursor/
+.claude/
+.cursorrules
 *.swp
 *.swo
 *~
@@ -78,6 +81,8 @@ tmp/
 .coverage
 htmlcov/
 .tox/
+test_quick.py
+test_simple.py
 
 # Documentation builds
 docs/_build/
