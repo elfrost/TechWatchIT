@@ -1,0 +1,260 @@
+{
+  "veille_techno": {
+    "description": "Releases, features et updates de NOS technologies",
+    "color": "blue",
+    "icon": "📦",
+    "feeds": [
+      {
+        "id": "microsoft_office365",
+        "name": "Microsoft 365 Blog",
+        "url": "https://www.microsoft.com/en-us/microsoft-365/blog/feed/",
+        "category": "Product Update",
+        "technology": "microsoft"
+      },
+      {
+        "id": "sentinelone_blog",
+        "name": "SentinelOne Blog",
+        "url": "https://www.sentinelone.com/feed/",
+        "category": "Product Update",
+        "technology": "sentinelone"
+      },
+      {
+        "id": "jumpcloud_blog",
+        "name": "JumpCloud Blog",
+        "url": "https://jumpcloud.com/blog/feed/",
+        "category": "Product Update",
+        "technology": "jumpcloud"
+      },
+      {
+        "id": "jumpcloud_resources",
+        "name": "JumpCloud Resources",
+        "url": "https://jumpcloud.com/resources/feed/",
+        "category": "Resources",
+        "technology": "jumpcloud"
+      },
+      {
+        "id": "vmware_blogs",
+        "name": "VMware Blogs",
+        "url": "https://blogs.vmware.com/feed/",
+        "category": "Product Update",
+        "technology": "vmware"
+      },
+      {
+        "id": "fortinet_blog",
+        "name": "Fortinet Blog",
+        "url": "https://www.fortinet.com/blog/rss",
+        "category": "Product Update",
+        "technology": "fortinet"
+      },
+      {
+        "id": "rubrik_blog",
+        "name": "Rubrik Blog",
+        "url": "https://www.rubrik.com/blog/rss.xml",
+        "category": "Product Update",
+        "technology": "rubrik"
+      },
+      {
+        "id": "dell_blog",
+        "name": "Dell Technologies Blog",
+        "url": "https://www.dell.com/en-us/blog/rss/",
+        "category": "Product Update",
+        "technology": "dell"
+      }
+    ]
+  },
+  "cve_vulnerabilites": {
+    "description": "CVE et vulnérabilités affectant NOS technologies",
+    "color": "orange",
+    "icon": "🔒",
+    "feeds": [
+      {
+        "id": "microsoft_security",
+        "name": "Microsoft Security Response Center",
+        "url": "https://msrc.microsoft.com/blog/feed/",
+        "category": "Security Advisory",
+        "technology": "microsoft"
+      },
+      {
+        "id": "microsoft_security_blog",
+        "name": "Microsoft Security Blog",
+        "url": "https://www.microsoft.com/security/blog/feed/",
+        "category": "Security Advisory",
+        "technology": "microsoft"
+      },
+      {
+        "id": "vmware_security",
+        "name": "VMware Security Advisories",
+        "url": "https://www.vmware.com/security/advisories.xml",
+        "category": "Security Advisory",
+        "technology": "vmware"
+      },
+      {
+        "id": "fortinet_psirt",
+        "name": "Fortinet PSIRT",
+        "url": "https://www.fortiguard.com/rss/psirt.xml",
+        "category": "Security Advisory",
+        "technology": "fortinet"
+      },
+      {
+        "id": "dell_security",
+        "name": "Dell Security Advisories",
+        "url": "https://www.dell.com/support/contents/us/en/04/article/product-support/self-support-knowledgebase/security-antivirus/alerts-vulnerabilities/rss",
+        "category": "Security Advisory",
+        "technology": "dell"
+      },
+      {
+        "id": "cisa_kev",
+        "name": "CISA Known Exploited Vulnerabilities",
+        "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.xml",
+        "category": "CVE Database",
+        "technology": "cve"
+      },
+      {
+        "id": "nvd_recent",
+        "name": "NVD Recent CVEs",
+        "url": "https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss.xml",
+        "category": "CVE Database",
+        "technology": "cve"
+      }
+    ]
+  },
+  "exploits_menaces": {
+    "description": "Exploits actifs, ransomware, zero-days et menaces générales",
+    "color": "red",
+    "icon": "🚨",
+    "feeds": [
+      {
+        "id": "cisa_current",
+        "name": "CISA Current Activity",
+        "url": "https://www.cisa.gov/uscert/ncas/current-activity.xml",
+        "category": "Threat Intelligence",
+        "technology": "exploits"
+      },
+      {
+        "id": "cisa_alerts",
+        "name": "CISA Cybersecurity Alerts",
+        "url": "https://www.cisa.gov/uscert/ncas/alerts.xml",
+        "category": "Critical Alerts",
+        "technology": "exploits"
+      },
+      {
+        "id": "sans_isc",
+        "name": "SANS Internet Storm Center",
+        "url": "https://isc.sans.edu/rssfeed.xml",
+        "category": "Threat Intelligence",
+        "technology": "exploits"
+      },
+      {
+        "id": "the_hacker_news",
+        "name": "The Hacker News",
+        "url": "https://feeds.feedburner.com/TheHackersNews",
+        "category": "Security News",
+        "technology": "exploits"
+      },
+      {
+        "id": "bleeping_computer",
+        "name": "Bleeping Computer",
+        "url": "https://www.bleepingcomputer.com/feed/",
+        "category": "Security News",
+        "technology": "exploits"
+      },
+      {
+        "id": "krebs_security",
+        "name": "Krebs on Security",
+        "url": "https://krebsonsecurity.com/feed/",
+        "category": "Threat Intelligence",
+        "technology": "exploits"
+      },
+      {
+        "id": "threatpost",
+        "name": "Threatpost",
+        "url": "https://threatpost.com/feed/",
+        "category": "Threat Intelligence",
+        "technology": "exploits"
+      },
+      {
+        "id": "us_cert_alerts",
+        "name": "US-CERT Alerts",
+        "url": "https://www.us-cert.gov/ncas/alerts.xml",
+        "category": "Critical Alerts",
+        "technology": "exploits"
+      }
+    ]
+  },
+  "actualites_it": {
+    "description": "Actualités IT générales, tendances et analyses",
+    "color": "green",
+    "icon": "📰",
+    "feeds": [
+      {
+        "id": "techcrunch",
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/feed/",
+        "category": "IT News",
+        "technology": "other"
+      },
+      {
+        "id": "ars_technica",
+        "name": "Ars Technica",
+        "url": "https://feeds.arstechnica.com/arstechnica/index",
+        "category": "IT News",
+        "technology": "other"
+      },
+      {
+        "id": "zdnet",
+        "name": "ZDNet",
+        "url": "https://www.zdnet.com/news/rss.xml",
+        "category": "IT News",
+        "technology": "other"
+      },
+      {
+        "id": "the_register",
+        "name": "The Register",
+        "url": "https://www.theregister.com/headlines.atom",
+        "category": "IT News",
+        "technology": "other"
+      },
+      {
+        "id": "wired",
+        "name": "Wired",
+        "url": "https://www.wired.com/feed/rss",
+        "category": "IT News",
+        "technology": "other"
+      },
+      {
+        "id": "venturebeat",
+        "name": "VentureBeat",
+        "url": "https://venturebeat.com/feed/",
+        "category": "IT News",
+        "technology": "other"
+      },
+      {
+        "id": "silicon_angle",
+        "name": "SiliconANGLE",
+        "url": "https://siliconangle.com/feed/",
+        "category": "IT News",
+        "technology": "other"
+      },
+      {
+        "id": "computerworld",
+        "name": "Computerworld",
+        "url": "https://www.computerworld.com/index.rss",
+        "category": "IT News",
+        "technology": "other"
+      }
+    ]
+  },
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2025-11-05",
+    "total_feeds": 39,
+    "description": "Sources RSS organisées par contexte métier pour TechWatchIT",
+    "context_counts": {
+      "veille_techno": 8,
+      "cve_vulnerabilites": 7,
+      "exploits_menaces": 8,
+      "actualites_it": 8
+    },
+    "usage": "Ce fichier définit les sources RSS à utiliser pour chaque contexte métier. Le système peut collecter les feeds de manière ciblée ou globale selon les besoins."
+  }
+}
