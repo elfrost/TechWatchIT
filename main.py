@@ -125,35 +125,35 @@ def process_articles():
 def send_daily_digest():
     """Envoyer le digest quotidien"""
     try:
-        print("📧 Envoi du digest quotidien...")
+        print("[EMAIL] Envoi du digest quotidien...")
         digest = DailyDigest()
         success = digest.run_daily_digest()
-        
+
         if success:
-            print("✅ Digest quotidien envoyé avec succès")
+            print("[SUCCESS] Digest quotidien envoye avec succes")
         else:
-            print("❌ Échec envoi digest quotidien")
-        
+            print("[ERROR] Echec envoi digest quotidien")
+
         return success
     except Exception as e:
-        print(f"❌ Erreur digest quotidien: {str(e)}")
+        print(f"[ERROR] Erreur digest quotidien: {str(e)}")
         return False
 
 def check_critical_alerts():
-    """Vérifier et envoyer les alertes critiques"""
+    """Verifier et envoyer les alertes critiques"""
     try:
-        print("🚨 Vérification des alertes critiques...")
+        print("[ALERTS] Verification des alertes critiques...")
         alert_handler = CriticalAlertHandler()
         sent_count = alert_handler.process_critical_alerts()
-        
+
         if sent_count > 0:
-            print(f"🚨 {sent_count} alertes critiques envoyées")
+            print(f"[ALERT] {sent_count} alertes critiques envoyees")
         else:
-            print("✅ Aucune alerte critique en attente")
-        
+            print("[INFO] Aucune alerte critique en attente")
+
         return sent_count
     except Exception as e:
-        print(f"❌ Erreur gestion alertes: {str(e)}")
+        print(f"[ERROR] Erreur gestion alertes: {str(e)}")
         return 0
 
 def run_full_pipeline():
