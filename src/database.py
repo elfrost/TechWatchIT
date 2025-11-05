@@ -96,7 +96,7 @@ class DatabaseManager:
                 cursor.execute('''
                 CREATE TABLE IF NOT EXISTS processed_articles (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    raw_article_id INT NOT NULL,
+                    raw_article_id INT NOT NULL UNIQUE,
                     category VARCHAR(50),
                     technology VARCHAR(50),
                     severity_level ENUM('low', 'medium', 'high', 'critical') DEFAULT 'medium',

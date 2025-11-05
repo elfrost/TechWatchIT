@@ -11,7 +11,11 @@
       "WebSearch",
       "Bash(git add:*)",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(pkill:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(dir src*.py /b)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

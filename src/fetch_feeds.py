@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import feedparser
 import requests
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional
 import logging
 from urllib.parse import urlparse
@@ -92,19 +92,28 @@ class FeedFetcher:
             
             articles = []
             
+            # Filtrer uniquement les articles des dernières 24 heures
+            cutoff_date = datetime.now(timezone.utc) - timedelta(hours=24)
+            
             for entry in feed.entries:
                 article = self._parse_entry(entry, feed_config)
                 if article:
-                    articles.append(article)
+                    # Vérifier la date de l'article
+                    article_date = article.get('published_date')
+                    if article_date and article_date >= cutoff_date:
+                        articles.append(article)
+                    # Si pas de date, on inclut l'article par sécurité
+                    elif not article_date:
+                        articles.append(article)
             
-            self.logger.info(f"✅ {len(articles)} articles récupérés de {feed_name}")
+            self.logger.info(f"[SUCCESS] {len(articles)} articles recuperes de {feed_name}")
             return articles
             
         except requests.exceptions.RequestException as e:
-            self.logger.error(f"❌ Erreur réseau pour {feed_name}: {e}")
+            self.logger.error(f"[ERROR] Erreur reseau pour {feed_name}: {e}")
             return []
         except Exception as e:
-            self.logger.error(f"❌ Erreur lors de la récupération de {feed_name}: {e}")
+            self.logger.error(f"[ERROR] Erreur lors de la recuperation de {feed_name}: {e}")
             return []
     
     def _parse_entry(self, entry, feed_config: Dict) -> Optional[Dict]:
@@ -128,18 +137,18 @@ class FeedFetcher:
             published_date = None
             if hasattr(entry, 'published_parsed') and entry.published_parsed:
                 try:
-                    published_date = datetime(*entry.published_parsed[:6])
+                    published_date = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
                 except (TypeError, ValueError):
                     pass
             
             if not published_date and hasattr(entry, 'updated_parsed') and entry.updated_parsed:
                 try:
-                    published_date = datetime(*entry.updated_parsed[:6])
+                    published_date = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
                 except (TypeError, ValueError):
                     pass
             
             if not published_date:
-                published_date = datetime.now()
+                published_date = datetime.now(timezone.utc)
             
             # Extraction du contenu complet si disponible
             content = ''
@@ -198,11 +207,11 @@ class FeedFetcher:
                 self.logger.error(f"Erreur lors de la sauvegarde: {e}")
                 continue
         
-        self.logger.info(f"💾 {saved_count}/{len(articles)} articles sauvegardés pour {feed_source}")
+        self.logger.info(f"[SAVE] {saved_count}/{len(articles)} articles sauvegardes pour {feed_source}")
     
     def fetch_all_feeds(self):
         """Récupérer tous les flux RSS configurés"""
-        self.logger.info("🚀 Début de la récupération de tous les flux RSS")
+        self.logger.info("[START] Debut de la recuperation de tous les flux RSS")
         
         total_articles = 0
         start_time = datetime.now()
@@ -231,7 +240,7 @@ class FeedFetcher:
                 execution_time = (datetime.now() - feed_start_time).total_seconds()
                 error_msg = str(e)
                 
-                self.logger.error(f"❌ Erreur pour {feed_id}: {error_msg}")
+                self.logger.error(f"[ERROR] Erreur pour {feed_id}: {error_msg}")
                 
                 # Logger l'erreur
                 self.db.log_fetch_operation(
@@ -244,7 +253,7 @@ class FeedFetcher:
         
         total_time = (datetime.now() - start_time).total_seconds()
         
-        self.logger.info(f"🎉 Collecte terminée: {total_articles} articles au total en {total_time:.2f}s")
+        self.logger.info(f"[COMPLETE] Collecte terminee: {total_articles} articles au total en {total_time:.2f}s")
         
         return {
             'total_articles': total_articles,
@@ -267,7 +276,7 @@ def main():
     sentinelone_articles = fetcher.fetch_rss_feed(RSS_FEEDS['sentinelone'])
     fetcher.save_articles(sentinelone_articles, 'sentinelone')
     
-    print(f"✅ Test terminé:")
+    print(f"[TEST] Test termine:")
     print(f"   - Fortinet: {len(fortinet_articles)} articles")
     print(f"   - SentinelOne: {len(sentinelone_articles)} articles")
     print(f"   - Base de données: {Config.DATABASE_PATH}")

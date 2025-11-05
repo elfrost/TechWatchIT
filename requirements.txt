@@ -1,3 +1,4 @@
+# Core dependencies
 feedparser
 python-dotenv
 beautifulsoup4
@@ -8,4 +9,13 @@ Flask-Cors
 gunicorn
 openai
 bleach
-pytz 
+pytz
+
+# PydanticAI and validation
+pydantic>=2.0.0
+pydantic-ai>=0.0.13
+httpx-sse
+
+# Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0 
